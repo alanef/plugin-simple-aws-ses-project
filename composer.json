@@ -21,7 +21,7 @@
         "phpcs": "phpcs",
         "phpcs-fix": "phpcbf",
         "phpcs-security": "phpcs -p --standard=phpcs_sec.xml",
-        "phpcompat": "phpcs -p --standard=PHPCompatibilityWP --runtime-set testVersion 7.4- simple-aws-ses",
+        "phpcompat": "phpcs -p --standard=PHPCompatibilityWP  --ignore=*/vendor/*  --extensions=php --runtime-set testVersion 7.4- simple-aws-ses",
         "build": [
             "cd simple-aws-ses && composer install --no-dev",
             "mkdir -p zipped",
