@@ -187,9 +187,9 @@ class SettingsPage {
 		foreach ( $regions as $key => $label ) {
 			printf(
 				'<option value="%s" %s>%s</option>',
-				$key,
+				esc_attr( $key ),
 				selected( $current_region, $key, false ),
-				$label
+				esc_html( $label )
 			);
 		}
 		echo '</select>';
@@ -234,7 +234,7 @@ class SettingsPage {
 				$.post(ajaxurl, {
 					action: 'simple_aws_ses_test_email',
 					email: email,
-					nonce: '<?php echo wp_create_nonce( 'simple_aws_ses_test' ); ?>'
+					nonce: '<?php echo esc_js( wp_create_nonce( 'simple_aws_ses_test' ) ); ?>'
 				}, function(response) {
 					if (response.success) {
 						$('#test_email_result').html('<span style="color: green;">✓ Test email sent successfully!</span>');
@@ -249,17 +249,21 @@ class SettingsPage {
 	}
 
 	public function handleTestEmail() {
-		// Verify nonce
-		if ( ! wp_verify_nonce( $_POST['nonce'], 'simple_aws_ses_test' ) ) {
+		// Verify nonce.
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'simple_aws_ses_test' ) ) {
 			wp_send_json_error( 'Invalid security token' );
 		}
 
-		// Check permissions
+		// Check permissions.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( 'Insufficient permissions' );
 		}
 
-		$to = sanitize_email( $_POST['email'] );
+		if ( ! isset( $_POST['email'] ) ) {
+			wp_send_json_error( 'Email address required' );
+		}
+
+		$to = sanitize_email( wp_unslash( $_POST['email'] ) );
 		if ( ! is_email( $to ) ) {
 			wp_send_json_error( 'Invalid email address' );
 		}

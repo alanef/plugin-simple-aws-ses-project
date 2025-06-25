@@ -36,8 +36,8 @@ jobs:
         composer install --prefer-dist --no-progress
         cd simple-aws-ses && composer install --prefer-dist --no-progress --no-dev
 
-    - name: Run PHP CodeSniffer
-      run: composer run-script phpcs
+    - name: Run Security Checks
+      run: composer run-script phpcs-security
 
     - name: Check PHP Compatibility
       run: composer run-script phpcompat
