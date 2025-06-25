@@ -60,13 +60,11 @@ jobs:
       run: wp package install wp-cli/dist-archive-command
 
     - name: Build plugin
-      run: composer run-script build
-
-    - name: Unzip
       run: |
-        mkdir -p tmp-build
-        ls -al zipped
-        unzip zipped/simple-aws-ses.zip -d tmp-build
+        cd simple-aws-ses && composer install --no-dev && cd ..
+        wp dist-archive ./simple-aws-ses ./simple-aws-ses.zip
+        mkdir tmp-build
+        unzip simple-aws-ses.zip -d tmp-build
 
     - name: WordPress Plugin Check
       uses: wordpress/plugin-check-action@v1
