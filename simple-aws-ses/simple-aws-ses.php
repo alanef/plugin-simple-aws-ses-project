@@ -10,38 +10,50 @@
  */
 
 // Prevent direct access
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 // Define plugin constants
-define('SIMPLE_AWS_SES_VERSION', '1.0.0');
-define('SIMPLE_AWS_SES_PLUGIN_DIR', plugin_dir_path(__FILE__));
-define('SIMPLE_AWS_SES_PLUGIN_URL', plugin_dir_url(__FILE__));
+define( 'SIMPLE_AWS_SES_VERSION', '1.0.0' );
+define( 'SIMPLE_AWS_SES_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'SIMPLE_AWS_SES_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 // Load Composer autoloader
-if (file_exists(SIMPLE_AWS_SES_PLUGIN_DIR . 'vendor/autoload.php')) {
-    require_once SIMPLE_AWS_SES_PLUGIN_DIR . 'vendor/autoload.php';
+if ( file_exists( SIMPLE_AWS_SES_PLUGIN_DIR . 'vendor/autoload.php' ) ) {
+	require_once SIMPLE_AWS_SES_PLUGIN_DIR . 'vendor/autoload.php';
 }
 
 // Initialize the plugin
-add_action('plugins_loaded', function () {
-    \SimpleAwsSes\Plugin::getInstance();
-});
+add_action(
+	'plugins_loaded',
+	function () {
+		\SimpleAwsSes\Plugin::getInstance();
+	}
+);
 
 // Activation hook
-register_activation_hook(__FILE__, function () {
-    // Add default options
-    add_option('simple_aws_ses_settings', [
-        'aws_access_key' => '',
-        'aws_secret_key' => '',
-        'aws_region' => 'us-east-1',
-        'from_email' => get_option('admin_email'),
-        'from_name' => get_bloginfo('name'),
-    ]);
-});
+register_activation_hook(
+	__FILE__,
+	function () {
+		// Add default options
+		add_option(
+			'simple_aws_ses_settings',
+			array(
+				'aws_access_key' => '',
+				'aws_secret_key' => '',
+				'aws_region'     => 'us-east-1',
+				'from_email'     => get_option( 'admin_email' ),
+				'from_name'      => get_bloginfo( 'name' ),
+			)
+		);
+	}
+);
 
 // Deactivation hook
-register_deactivation_hook(__FILE__, function () {
-    // Clean up if necessary
-});
+register_deactivation_hook(
+	__FILE__,
+	function () {
+		// Clean up if necessary
+	}
+);

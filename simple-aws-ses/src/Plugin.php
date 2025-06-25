@@ -2,31 +2,28 @@
 
 namespace SimpleAwsSes;
 
-class Plugin
-{
-    private static $instance = null;
+class Plugin {
 
-    public static function getInstance()
-    {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
+	private static $instance = null;
 
-    private function __construct()
-    {
-        $this->init();
-    }
+	public static function getInstance() {
+		if ( self::$instance === null ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
 
-    private function init()
-    {
-        // Initialize admin
-        if (is_admin()) {
-            new Admin\SettingsPage();
-        }
+	private function __construct() {
+		$this->init();
+	}
 
-        // Initialize email handler
-        new Email\MailHandler();
-    }
+	private function init() {
+		// Initialize admin
+		if ( is_admin() ) {
+			new Admin\SettingsPage();
+		}
+
+		// Initialize email handler
+		new Email\MailHandler();
+	}
 }
