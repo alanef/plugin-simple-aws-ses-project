@@ -8,6 +8,9 @@ on:
       - 'v*.*'       # Matches v2.3
       - '*.*'        # Matches 2.3
 
+permissions:
+  contents: write
+
 jobs:
   quality-checks:
     uses: ./.github/workflows/checks.yml
