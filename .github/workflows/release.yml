@@ -3,7 +3,10 @@ name: Release
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*.*.*'    # Matches v1.7.3
+      - '*.*.*'      # Matches 1.7.3
+      - 'v*.*'       # Matches v2.3
+      - '*.*'        # Matches 2.3
 
 jobs:
   quality-checks:
