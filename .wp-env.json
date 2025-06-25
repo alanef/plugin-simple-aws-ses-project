@@ -1,0 +1,13 @@
+{
+    "plugins": [
+        "./simple-aws-ses"
+    ],
+    "port": 8414,
+    "testsPort": 8415,
+    "config": {
+        "WP_DEBUG": true,
+        "WP_DEBUG_DISPLAY": true,
+        "WP_DEBUG_LOG": "/var/www/html/wp-content/debug.log",
+        "SCRIPT_DEBUG": true
+    }
+}

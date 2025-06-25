@@ -1,0 +1,25 @@
+# Development files
+.git
+.gitignore
+
+# Build tools
+composer.json
+composer.lock
+
+# Tests
+tests
+phpunit.xml
+phpunit.xml.dist
+
+# Documentation
+CONTRIBUTING.md
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,16 @@
+{
+  "name": "simple-aws-ses-project",
+  "version": "1.0.0",
+  "description": "Development environment for Simple AWS SES WordPress plugin",
+  "scripts": {
+    "test": "wp-env run tests-cli 'cd /var/www/html/wp-content/plugins/simple-aws-ses && phpunit'",
+    "env:start": "wp-env start",
+    "env:stop": "wp-env stop",
+    "env:destroy": "wp-env destroy",
+    "build": "composer run-script build"
+  },
+  "devDependencies": {
+    "@wordpress/env": "^8.13.0"
+  },
+  "license": "GPL-2.0-or-later"
+}

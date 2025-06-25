@@ -1,0 +1,42 @@
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Dependencies
+node_modules/
+vendor/
+simple-aws-ses/vendor/
+
+# Build artifacts
+dist/
+build/
+zipped/
+*.zip
+
+# WordPress environment
+.wp-env.override.json
+wordpress/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+
+# Composer
+composer.lock
+
+# Package manager locks (at root level)
+package-lock.json
+yarn.lock

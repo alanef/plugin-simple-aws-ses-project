@@ -1,0 +1,35 @@
+# Copyright (C) 2025 Alan Fuller
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Simple AWS SES 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/simple-aws-ses\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-06-25T10:39:41+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.10.0\n"
+"X-Domain: simple-aws-ses\n"
+
+#. Plugin Name of the plugin
+#: simple-aws-ses.php
+msgid "Simple AWS SES"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: simple-aws-ses.php
+msgid "https://fw9.uk/simple-aws-ses"
+msgstr ""
+
+#. Description of the plugin
+#: simple-aws-ses.php
+msgid "Send WordPress emails through Amazon SES"
+msgstr ""
+
+#. Author of the plugin
+#: simple-aws-ses.php
+msgid "Alan Fuller"
+msgstr ""

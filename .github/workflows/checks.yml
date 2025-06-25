@@ -1,0 +1,66 @@
+name: Quality Checks
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  quality-checks:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Extract PHP version
+      id: php_version
+      run: |
+        PHP_VERSION=$(grep -oP 'Requires PHP:\s*\K[\d.]+' simple-aws-ses/simple-aws-ses.php || echo "7.2")
+        echo "version=$PHP_VERSION" >> $GITHUB_OUTPUT
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ steps.php_version.outputs.version }}
+        tools: composer:v2
+        coverage: none
+
+    - name: Validate composer.json
+      run: |
+        composer validate --no-check-all --no-check-publish
+        cd simple-aws-ses && composer validate --no-check-all --no-check-publish
+
+    - name: Install dependencies
+      run: |
+        composer install --prefer-dist --no-progress
+        cd simple-aws-ses && composer install --prefer-dist --no-progress --no-dev
+
+    - name: Run PHP CodeSniffer
+      run: composer run-script phpcs
+
+    - name: Check PHP Compatibility
+      run: composer run-script phpcompat
+
+    - name: Check version consistency
+      run: |
+        PLUGIN_VERSION=$(grep -oP 'Version:\s*\K[\d.]+' simple-aws-ses/simple-aws-ses.php)
+        README_VERSION=$(grep -oP 'Stable tag:\s*\K[\d.]+' simple-aws-ses/readme.txt)
+        CONSTANT_VERSION=$(grep -oP "SIMPLE_AWS_SES_VERSION['\"],\s*['\"]\\K[\\d.]+" simple-aws-ses/simple-aws-ses.php)
+        
+        echo "Plugin header version: $PLUGIN_VERSION"
+        echo "Readme stable tag: $README_VERSION"
+        echo "Version constant: $CONSTANT_VERSION"
+        
+        if [ "$PLUGIN_VERSION" != "$README_VERSION" ] || [ "$PLUGIN_VERSION" != "$CONSTANT_VERSION" ]; then
+          echo "Version mismatch detected!"
+          exit 1
+        fi
+
+    - name: Build plugin
+      run: composer run-script build
+
+    - name: WordPress Plugin Check
+      uses: wordpress/plugin-check-action@v1
+      with:
+        build-dir: 'dist/simple-aws-ses'

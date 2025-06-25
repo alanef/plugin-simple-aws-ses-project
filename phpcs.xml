@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ruleset name="Simple AWS SES">
+    <description>Coding standards for Simple AWS SES WordPress plugin</description>
+
+    <!-- What to scan -->
+    <file>./simple-aws-ses</file>
+    
+    <!-- Exclude vendor directories -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    
+    <!-- How to scan -->
+    <arg value="sp"/> <!-- Show progress and sniff codes -->
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+    <arg name="parallel" value="8"/>
+    <arg name="extensions" value="php"/>
+
+    <!-- Rules: WordPress Coding Standards -->
+    <rule ref="WordPress">
+        <!-- Allow short array syntax -->
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+        
+        <!-- We're not translating right now -->
+        <exclude name="WordPress.WP.I18n"/>
+    </rule>
+
+    <!-- Minimum supported WordPress version -->
+    <config name="minimum_supported_wp_version" value="5.0"/>
+
+    <!-- PHP version check -->
+    <config name="testVersion" value="7.2-"/>
+    
+    <!-- Use WordPress PHP Compatibility -->
+    <rule ref="PHPCompatibilityWP"/>
+</ruleset>
