@@ -56,6 +56,8 @@ jobs:
           echo "Version mismatch detected!"
           exit 1
         fi
+    - name: Install WP-CLI dist-archive command
+      run: wp package install wp-cli/dist-archive-command
 
     - name: Build plugin
       run: composer run-script build
