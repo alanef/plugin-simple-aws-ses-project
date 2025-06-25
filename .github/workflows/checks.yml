@@ -71,4 +71,4 @@ jobs:
     - name: WordPress Plugin Check
       uses: wordpress/plugin-check-action@v1
       with:
-        build-dir: 'temp-build/simple-aws-ses'
+        build-dir: 'tmp-build/simple-aws-ses'
