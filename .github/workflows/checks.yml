@@ -62,7 +62,12 @@ jobs:
     - name: Build plugin
       run: composer run-script build
 
+    - name: Unzip
+      run: |
+        mkdir tmp-build
+        unzip simple-aws-ses.zip -d tmp-build
+
     - name: WordPress Plugin Check
       uses: wordpress/plugin-check-action@v1
       with:
-        build-dir: 'dist/simple-aws-ses'
+        build-dir: 'temp-build/simple-aws-ses'
