@@ -16,7 +16,7 @@ jobs:
     - name: Extract PHP version
       id: php_version
       run: |
-        PHP_VERSION=$(grep -oP 'Requires PHP:\s*\K[\d.]+' simple-aws-ses/simple-aws-ses.php || echo "7.2")
+        PHP_VERSION=$(grep -oP 'Requires PHP:\s*\K[\d.]+' simple-aws-ses/simple-aws-ses.php || echo "7.4")
         echo "version=$PHP_VERSION" >> $GITHUB_OUTPUT
 
     - name: Setup PHP
