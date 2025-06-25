@@ -32,7 +32,7 @@ class SesSender {
 				)
 			);
 		} catch ( \Exception $e ) {
-			error_log( 'Simple AWS SES: Failed to initialize SES client - ' . $e->getMessage() );
+			// Silently fail - will be caught when trying to send
 		}
 	}
 
@@ -56,10 +56,6 @@ class SesSender {
 		$raw_message = $this->buildRawMessage( $from_email, $from_name, $recipients, $subject, $message, $parsed_headers, $attachments, $boundary );
 
 		try {
-			error_log( 'Simple AWS SES: Attempting to send email to ' . implode( ', ', $recipients ) );
-			error_log( 'Simple AWS SES: From: ' . sprintf( '%s <%s>', $from_name, $from_email ) );
-			error_log( 'Simple AWS SES: Region: ' . ( $this->options['aws_region'] ?? 'us-east-1' ) );
-
 			$result = $this->client->sendRawEmail(
 				array(
 					'RawMessage' => array(
@@ -68,15 +64,10 @@ class SesSender {
 				)
 			);
 
-			error_log( 'Simple AWS SES: Email sent successfully. Message ID: ' . $result->get( 'MessageId' ) );
 			return true;
 		} catch ( AwsException $e ) {
-			error_log( 'Simple AWS SES: Failed to send email - ' . $e->getAwsErrorMessage() );
-			error_log( 'Simple AWS SES: Error code: ' . $e->getAwsErrorCode() );
-			error_log( 'Simple AWS SES: Request ID: ' . $e->getAwsRequestId() );
 			return false;
 		} catch ( \Exception $e ) {
-			error_log( 'Simple AWS SES: Unexpected error - ' . $e->getMessage() );
 			return false;
 		}
 	}

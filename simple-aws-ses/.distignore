@@ -1,9 +1,9 @@
 # Development files
 .git
 .gitignore
+.distignore
 
 # Build tools
-composer.json
 composer.lock
 
 # Tests
