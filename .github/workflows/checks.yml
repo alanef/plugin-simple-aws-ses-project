@@ -64,8 +64,8 @@ jobs:
 
     - name: Unzip
       run: |
-        mkdir tmp-build
-        cd zipped
+        mkdir -p simple-aws-ses/tmp-build
+        cd simple-aws-ses/zipped
         unzip simple-aws-ses.zip -d tmp-build
 
     - name: WordPress Plugin Check
