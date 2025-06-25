@@ -23,7 +23,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ steps.php_version.outputs.version }}
-        tools: composer:v2
+        tools: composer:v2,  wp-cli
         coverage: none
 
     - name: Validate composer.json
