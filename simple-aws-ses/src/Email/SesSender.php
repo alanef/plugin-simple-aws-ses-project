@@ -147,7 +147,7 @@ class SesSender {
 
 		// Determine content type
 		$content_type = $headers['content_type'] ?? 'text/plain';
-		$is_html      = strpos( $content_type, 'text/html' ) !== false || strpos( $message, '<html' ) !== false;
+		$is_html      = stripos( $content_type, 'text/html' ) !== false || $this->looksLikeHtml( $message );
 
 		if ( ! empty( $attachments ) ) {
 			// Multipart message with attachments
@@ -187,5 +187,17 @@ class SesSender {
 		}
 
 		return $raw_message;
+	}
+
+	/**
+	 * Check if message content looks like HTML.
+	 *
+	 * @param string $message The message content to check.
+	 * @return bool True if the message appears to contain HTML.
+	 */
+	private function looksLikeHtml( $message ) {
+		// Check for common HTML tags (case-insensitive)
+		$html_pattern = '/<(html|body|div|p|br|span|a|strong|em|b|i|u|h[1-6]|ul|ol|li|table|tr|td|th|img|head|style|script)[>\s\/]/i';
+		return (bool) preg_match( $html_pattern, $message );
 	}
 }

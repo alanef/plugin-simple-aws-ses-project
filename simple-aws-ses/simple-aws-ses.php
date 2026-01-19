@@ -3,7 +3,7 @@
  * Plugin Name: Simple AWS SES
  * Plugin URI: https://fw9.uk/simple-aws-ses
  * Description: Send WordPress emails through Amazon SES
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Alan Fuller
  * License: GPL v2 or later
  * Text Domain: simple-aws-ses
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'SIMPLE_AWS_SES_VERSION', '1.0.0' );
+define( 'SIMPLE_AWS_SES_VERSION', '1.1.0' );
 define( 'SIMPLE_AWS_SES_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SIMPLE_AWS_SES_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 

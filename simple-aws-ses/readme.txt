@@ -3,7 +3,7 @@ Contributors: alanfuller
 Tags: email, aws, ses, smtp
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,9 @@ Your IAM user needs the `ses:SendEmail` and `ses:SendRawEmail` permissions.
 4. Review your WordPress error logs for specific error messages
 
 == Changelog ==
+
+= 1.1.0 =
+* Fixed HTML email detection - emails with common HTML tags are now correctly sent as text/html
 
 = 1.0.0 =
 * Initial release
