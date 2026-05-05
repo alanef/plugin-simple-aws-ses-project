@@ -2,6 +2,8 @@
 
 namespace SimpleAwsSes\Email;
 
+defined( 'ABSPATH' ) || exit;
+
 use SimpleAwsSes\Credentials;
 
 class MailHandler {

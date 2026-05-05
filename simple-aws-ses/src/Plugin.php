@@ -2,6 +2,8 @@
 
 namespace SimpleAwsSes;
 
+defined( 'ABSPATH' ) || exit;
+
 class Plugin {
 
 	private static $instance = null;

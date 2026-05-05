@@ -2,6 +2,8 @@
 
 namespace SimpleAwsSes\Admin;
 
+defined( 'ABSPATH' ) || exit;
+
 use SimpleAwsSes\Credentials;
 
 class SettingsPage {

@@ -2,6 +2,8 @@
 
 namespace SimpleAwsSes;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Resolves AWS connection settings from PHP constants first, then DB options.
  *

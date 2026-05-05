@@ -2,6 +2,8 @@
 
 namespace SimpleAwsSes\Email;
 
+defined( 'ABSPATH' ) || exit;
+
 use Aws\Ses\SesClient;
 use Aws\Exception\AwsException;
 use SimpleAwsSes\Credentials;
