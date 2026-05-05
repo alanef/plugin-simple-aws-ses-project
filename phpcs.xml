@@ -29,7 +29,7 @@
     <config name="minimum_supported_wp_version" value="5.0"/>
 
     <!-- PHP version check -->
-    <config name="testVersion" value="7.2-"/>
+    <config name="testVersion" value="8.2-8.4"/>
     
     <!-- Use WordPress PHP Compatibility -->
     <rule ref="PHPCompatibilityWP"/>

@@ -20,7 +20,7 @@ npm run env:start
 
 # Run code quality checks
 composer run-script phpcs-security  # Security-focused checks only
-composer run-script phpcompat       # PHP 7.2+ compatibility check
+composer run-script phpcompat       # PHP 8.2+ compatibility check
 
 # Build for release (creates zipped/simple-aws-ses.zip)
 composer run-script build
@@ -64,7 +64,7 @@ The plugin uses PSR-4 autoloading with namespace `SimpleAwsSes\`:
 - Both workflows require `wp-cli/dist-archive-command` package installation
 
 ### Development Constraints
-- PHP 7.4+ required (uses null coalescing operator)
+- PHP 8.2+ required (driven by aws/aws-sdk-php ^3 minimum)
 - Must maintain WordPress coding standards (PHPCS configured)
 - Plugin must work in WordPress 5.0+ environment
 - AWS credentials must have `ses:SendRawEmail` permission (NOT `ses:SendEmail`)

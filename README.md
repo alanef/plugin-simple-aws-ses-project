@@ -19,7 +19,7 @@ This repository contains the development environment for the Simple AWS SES Word
 
 ### Prerequisites
 
-- PHP 7.2 or higher
+- PHP 8.2 or higher
 - Composer
 - Node.js and npm (for development tools)
 - WP-CLI (for building releases)
@@ -87,7 +87,7 @@ composer run-script phpcs-fix
 
 ### PHP Compatibility
 
-Check compatibility with PHP 7.2+:
+Check compatibility with PHP 8.2+:
 ```bash
 composer run-script phpcompat
 ```

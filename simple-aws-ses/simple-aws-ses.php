@@ -4,6 +4,8 @@
  * Plugin URI: https://fw9.uk/simple-aws-ses
  * Description: Send WordPress emails through Amazon SES
  * Version: 1.2.0
+ * Requires at least: 5.0
+ * Requires PHP: 8.2
  * Author: Alan Fuller
  * License: GPL v2 or later
  * Text Domain: simple-aws-ses
