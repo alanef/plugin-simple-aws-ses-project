@@ -58,7 +58,7 @@ jobs:
           exit 1
         fi
     - name: Install WP-CLI dist-archive command
-      run: wp package install wp-cli/dist-archive-command
+      run: wp package install wp-cli/dist-archive-command:v3.1.0
 
     - name: Build plugin
       run: |
