@@ -4,6 +4,7 @@ namespace SimpleAwsSes\Email;
 
 use Aws\Ses\SesClient;
 use Aws\Exception\AwsException;
+use SimpleAwsSes\Credentials;
 
 class SesSender {
 
@@ -16,7 +17,7 @@ class SesSender {
 	}
 
 	private function initializeClient() {
-		if ( empty( $this->options['aws_access_key'] ) || empty( $this->options['aws_secret_key'] ) ) {
+		if ( ! Credentials::isConfigured() ) {
 			return;
 		}
 
@@ -24,10 +25,10 @@ class SesSender {
 			$this->client = new SesClient(
 				array(
 					'version'     => 'latest',
-					'region'      => $this->options['aws_region'] ?? 'us-east-1',
+					'region'      => Credentials::region(),
 					'credentials' => array(
-						'key'    => $this->options['aws_access_key'],
-						'secret' => $this->options['aws_secret_key'],
+						'key'    => Credentials::accessKey(),
+						'secret' => Credentials::secretKey(),
 					),
 				)
 			);

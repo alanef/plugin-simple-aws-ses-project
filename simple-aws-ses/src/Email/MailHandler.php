@@ -2,6 +2,8 @@
 
 namespace SimpleAwsSes\Email;
 
+use SimpleAwsSes\Credentials;
+
 class MailHandler {
 
 	private $sesSender;
@@ -11,11 +13,8 @@ class MailHandler {
 	}
 
 	public function interceptMail( $null, $args ) {
-		// Get options to check if plugin is configured
-		$options = get_option( 'simple_aws_ses_settings' );
-
 		// If not configured, let WordPress handle it normally
-		if ( empty( $options['aws_access_key'] ) || empty( $options['aws_secret_key'] ) ) {
+		if ( ! Credentials::isConfigured() ) {
 			return $null;
 		}
 

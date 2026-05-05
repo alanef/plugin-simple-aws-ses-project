@@ -2,6 +2,8 @@
 
 namespace SimpleAwsSes\Admin;
 
+use SimpleAwsSes\Credentials;
+
 class SettingsPage {
 
 	private $options;
@@ -117,16 +119,28 @@ class SettingsPage {
 
 	public function sanitize( $input ) {
 		$new_input = array();
+		$existing  = get_option( 'simple_aws_ses_settings' );
+		if ( ! is_array( $existing ) ) {
+			$existing = array();
+		}
 
-		if ( isset( $input['aws_access_key'] ) ) {
+		// When a credential is defined via constant, the input field is disabled
+		// and not submitted — preserve whatever is in the DB rather than blanking it.
+		if ( Credentials::isAccessKeyDefined() ) {
+			$new_input['aws_access_key'] = $existing['aws_access_key'] ?? '';
+		} elseif ( isset( $input['aws_access_key'] ) ) {
 			$new_input['aws_access_key'] = sanitize_text_field( $input['aws_access_key'] );
 		}
 
-		if ( isset( $input['aws_secret_key'] ) ) {
+		if ( Credentials::isSecretKeyDefined() ) {
+			$new_input['aws_secret_key'] = $existing['aws_secret_key'] ?? '';
+		} elseif ( isset( $input['aws_secret_key'] ) ) {
 			$new_input['aws_secret_key'] = sanitize_text_field( $input['aws_secret_key'] );
 		}
 
-		if ( isset( $input['aws_region'] ) ) {
+		if ( Credentials::isRegionDefined() ) {
+			$new_input['aws_region'] = $existing['aws_region'] ?? '';
+		} elseif ( isset( $input['aws_region'] ) ) {
 			$new_input['aws_region'] = sanitize_text_field( $input['aws_region'] );
 		}
 
@@ -143,6 +157,11 @@ class SettingsPage {
 
 	public function printSectionInfo() {
 		echo 'Enter your AWS credentials below. You can find these in your AWS Console under IAM.';
+		echo '<p class="description">Credentials can also be defined as PHP constants in <code>wp-config.php</code> (<code>SIMPLE_AWS_SES_ACCESS_KEY_ID</code>, <code>SIMPLE_AWS_SES_SECRET_ACCESS_KEY</code>, <code>SIMPLE_AWS_SES_REGION</code>). When defined, the matching field below is locked and the constant value is used.</p>';
+	}
+
+	private function definedNotice() {
+		return ' <span class="description"><em>Defined in <code>wp-config.php</code>.</em></span>';
 	}
 
 	public function printSenderSectionInfo() {
@@ -150,17 +169,34 @@ class SettingsPage {
 	}
 
 	public function awsAccessKeyCallback() {
+		$defined  = Credentials::isAccessKeyDefined();
+		$value    = $defined ? Credentials::accessKey() : ( $this->options['aws_access_key'] ?? '' );
+		$disabled = $defined ? ' disabled="disabled"' : '';
 		printf(
-			'<input type="text" id="aws_access_key" name="simple_aws_ses_settings[aws_access_key]" value="%s" class="regular-text" />',
-			isset( $this->options['aws_access_key'] ) ? esc_attr( $this->options['aws_access_key'] ) : ''
+			'<input type="text" id="aws_access_key" name="simple_aws_ses_settings[aws_access_key]" value="%s" class="regular-text"%s />',
+			esc_attr( $value ),
+			$disabled // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		);
+		if ( $defined ) {
+			echo $this->definedNotice(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
 	}
 
 	public function awsSecretKeyCallback() {
+		$defined  = Credentials::isSecretKeyDefined();
+		// Never echo the actual secret value back into the page when locked.
+		$value    = $defined ? '••••••••' : ( $this->options['aws_secret_key'] ?? '' );
+		$type     = $defined ? 'text' : 'password';
+		$disabled = $defined ? ' disabled="disabled"' : '';
 		printf(
-			'<input type="password" id="aws_secret_key" name="simple_aws_ses_settings[aws_secret_key]" value="%s" class="regular-text" />',
-			isset( $this->options['aws_secret_key'] ) ? esc_attr( $this->options['aws_secret_key'] ) : ''
+			'<input type="%s" id="aws_secret_key" name="simple_aws_ses_settings[aws_secret_key]" value="%s" class="regular-text"%s />',
+			esc_attr( $type ),
+			esc_attr( $value ),
+			$disabled // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		);
+		if ( $defined ) {
+			echo $this->definedNotice(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
 	}
 
 	public function awsRegionCallback() {
@@ -181,9 +217,14 @@ class SettingsPage {
 			'sa-east-1'      => 'South America (São Paulo)',
 		);
 
-		$current_region = isset( $this->options['aws_region'] ) ? $this->options['aws_region'] : 'us-east-1';
+		$defined        = Credentials::isRegionDefined();
+		$current_region = $defined ? Credentials::region() : ( $this->options['aws_region'] ?? 'us-east-1' );
+		$disabled       = $defined ? ' disabled="disabled"' : '';
 
-		echo '<select id="aws_region" name="simple_aws_ses_settings[aws_region]">';
+		printf(
+			'<select id="aws_region" name="simple_aws_ses_settings[aws_region]"%s>',
+			$disabled // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		);
 		foreach ( $regions as $key => $label ) {
 			printf(
 				'<option value="%s" %s>%s</option>',
@@ -193,6 +234,9 @@ class SettingsPage {
 			);
 		}
 		echo '</select>';
+		if ( $defined ) {
+			echo $this->definedNotice(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
 	}
 
 	public function fromEmailCallback() {

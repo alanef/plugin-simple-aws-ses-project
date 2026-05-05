@@ -3,7 +3,7 @@ Contributors: alanfuller
 Tags: email, aws, ses, smtp
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,6 +15,7 @@ Simple AWS SES replaces the default WordPress email function with Amazon SES, en
 
 Features:
 * Easy configuration through WordPress admin
+* Optional credential configuration via wp-config.php constants (12-factor / env-var friendly)
 * Supports all standard WordPress emails
 * Test email functionality
 * Secure credential storage
@@ -39,6 +40,20 @@ Before using this plugin, you need to:
 4. Create an IAM user with SES sending permissions
 5. Generate Access Keys for the IAM user
 
+== Defining Credentials in wp-config.php ==
+
+Instead of storing AWS credentials in the database via the settings UI, you can define them as PHP constants in `wp-config.php`. This is the recommended approach for production sites and works well with environment variables on managed hosts.
+
+Add the following before the `/* That's all, stop editing! */` line in `wp-config.php`:
+
+`
+define( 'SIMPLE_AWS_SES_ACCESS_KEY_ID',     getenv( 'SIMPLE_AWS_SES_ACCESS_KEY_ID' ) ?: '' );
+define( 'SIMPLE_AWS_SES_SECRET_ACCESS_KEY', getenv( 'SIMPLE_AWS_SES_SECRET_ACCESS_KEY' ) ?: '' );
+define( 'SIMPLE_AWS_SES_REGION',            getenv( 'SIMPLE_AWS_SES_REGION' ) ?: 'us-east-1' );
+`
+
+Each constant is independent — you can define one, two, or all three. Any constant that is defined takes precedence over the value saved in the settings page, and the matching field in the admin UI is locked while the constant is in effect.
+
 == Frequently Asked Questions ==
 
 = What permissions does my AWS IAM user need? =
@@ -53,6 +68,9 @@ Your IAM user needs the `ses:SendEmail` and `ses:SendRawEmail` permissions.
 4. Review your WordPress error logs for specific error messages
 
 == Changelog ==
+
+= 1.2.0 =
+* Added support for defining AWS credentials via PHP constants in wp-config.php (`SIMPLE_AWS_SES_ACCESS_KEY_ID`, `SIMPLE_AWS_SES_SECRET_ACCESS_KEY`, `SIMPLE_AWS_SES_REGION`). When a constant is defined, the matching field in the settings UI is locked.
 
 = 1.1.0 =
 * Fixed HTML email detection - emails with common HTML tags are now correctly sent as text/html
