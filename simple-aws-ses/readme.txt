@@ -4,7 +4,7 @@ Tags: email, aws, ses, smtp
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 8.2
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,6 +69,10 @@ Your IAM user needs the `ses:SendEmail` and `ses:SendRawEmail` permissions.
 4. Review your WordPress error logs for specific error messages
 
 == Changelog ==
+
+= 1.2.1 =
+* Test email button now sends via AWS SES directly instead of `wp_mail()`, so it no longer reports success when SES has actually failed and WordPress fell back to the default mailer.
+* AWS errors (code, message, request ID) are now surfaced in the test email response and written to `debug.log` when `WP_DEBUG` is enabled. SES failures during normal `wp_mail()` flow are also logged before the WordPress default mailer takes over.
 
 = 1.2.0 =
 * Added support for defining AWS credentials via PHP constants in wp-config.php (`SIMPLE_AWS_SES_ACCESS_KEY_ID`, `SIMPLE_AWS_SES_SECRET_ACCESS_KEY`, `SIMPLE_AWS_SES_REGION`). When a constant is defined, the matching field in the settings UI is locked.

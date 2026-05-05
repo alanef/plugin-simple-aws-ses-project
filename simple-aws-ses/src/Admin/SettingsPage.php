@@ -5,6 +5,7 @@ namespace SimpleAwsSes\Admin;
 defined( 'ABSPATH' ) || exit;
 
 use SimpleAwsSes\Credentials;
+use SimpleAwsSes\Email\SesSender;
 
 class SettingsPage {
 
@@ -314,6 +315,10 @@ class SettingsPage {
 			wp_send_json_error( 'Invalid email address' );
 		}
 
+		if ( ! Credentials::isConfigured() ) {
+			wp_send_json_error( 'AWS credentials are not configured.' );
+		}
+
 		$subject  = 'Simple AWS SES Test Email';
 		$message  = 'This is a test email from your WordPress site using Simple AWS SES plugin.';
 		$message .= "\n\n";
@@ -323,12 +328,17 @@ class SettingsPage {
 		$message .= "\n";
 		$message .= 'URL: ' . get_bloginfo( 'url' );
 
-		$result = wp_mail( $to, $subject, $message );
+		// Bypass wp_mail() so we exercise SES directly. wp_mail() would happily
+		// fall back to the default mailer if SES failed and report success,
+		// which is the exact misleading behaviour this test is meant to detect.
+		$sender = new SesSender();
+		$sent   = $sender->send( $to, $subject, $message );
 
-		if ( $result ) {
-			wp_send_json_success( 'Test email sent successfully' );
-		} else {
-			wp_send_json_error( 'Failed to send test email. Please check your settings and error logs.' );
+		if ( $sent ) {
+			wp_send_json_success( 'Test email sent via AWS SES.' );
 		}
+
+		$err = $sender->getLastError();
+		wp_send_json_error( 'SES send failed: ' . ( '' !== $err ? $err : 'unknown error (enable WP_DEBUG for details)' ) );
 	}
 }

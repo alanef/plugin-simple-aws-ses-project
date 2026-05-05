@@ -12,14 +12,20 @@ class SesSender {
 
 	private $client;
 	private $options;
+	private $lastError = '';
 
 	public function __construct() {
 		$this->options = get_option( 'simple_aws_ses_settings' );
 		$this->initializeClient();
 	}
 
+	public function getLastError() {
+		return $this->lastError;
+	}
+
 	private function initializeClient() {
 		if ( ! Credentials::isConfigured() ) {
+			$this->lastError = 'AWS credentials are not configured.';
 			return;
 		}
 
@@ -35,12 +41,16 @@ class SesSender {
 				)
 			);
 		} catch ( \Exception $e ) {
-			// Silently fail - will be caught when trying to send
+			$this->lastError = 'SES client init failed: ' . $e->getMessage();
+			$this->logDebug( $this->lastError );
 		}
 	}
 
 	public function send( $to, $subject, $message, $headers = '', $attachments = array() ) {
 		if ( ! $this->client ) {
+			if ( '' === $this->lastError ) {
+				$this->lastError = 'SES client not initialized.';
+			}
 			return false;
 		}
 
@@ -67,11 +77,29 @@ class SesSender {
 				)
 			);
 
+			$this->lastError = '';
+			$this->logDebug( 'sendRawEmail succeeded. MessageId=' . $result->get( 'MessageId' ) );
 			return true;
 		} catch ( AwsException $e ) {
+			$this->lastError = sprintf(
+				'[%s] %s (request id: %s)',
+				$e->getAwsErrorCode() ?: 'unknown',
+				$e->getAwsErrorMessage() ?: $e->getMessage(),
+				$e->getAwsRequestId() ?: 'n/a'
+			);
+			$this->logDebug( 'sendRawEmail failed: ' . $this->lastError );
 			return false;
 		} catch ( \Exception $e ) {
+			$this->lastError = $e->getMessage();
+			$this->logDebug( 'sendRawEmail error: ' . $this->lastError );
 			return false;
+		}
+	}
+
+	private function logDebug( $message ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( '[Simple AWS SES] ' . $message );
 		}
 	}
 
