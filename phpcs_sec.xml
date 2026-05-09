@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
-<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Simple AWS SES Security"
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Fullworks Simple Setup for Amazon SES Security"
          xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
 
-    <description>WordPress Security Rules for Simple AWS SES</description>
+    <description>WordPress Security Rules for Fullworks Simple Setup for Amazon SES</description>
 
     <!-- What to scan -->
-    <file>./simple-aws-ses</file>
-    
+    <file>./fullworks-simple-setup-for-amazon-ses</file>
+
     <!-- Exclude vendor directories -->
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/node_modules/*</exclude-pattern>

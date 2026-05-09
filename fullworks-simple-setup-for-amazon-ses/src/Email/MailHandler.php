@@ -1,10 +1,10 @@
 <?php
 
-namespace SimpleAwsSes\Email;
+namespace Fullworks\SimpleSetupForAmazonSes\Email;
 
 defined( 'ABSPATH' ) || exit;
 
-use SimpleAwsSes\Credentials;
+use Fullworks\SimpleSetupForAmazonSes\Credentials;
 
 class MailHandler {
 
@@ -45,7 +45,7 @@ class MailHandler {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			$err = $this->sesSender->getLastError();
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( '[Simple AWS SES] SES send failed, falling back to WordPress default mail. ' . $err );
+			error_log( '[Fullworks SES] SES send failed, falling back to WordPress default mail. ' . $err );
 		}
 
 		return $null;

@@ -1,6 +1,6 @@
-=== Simple AWS SES ===
-Contributors: alanfuller
-Tags: email, aws, ses, smtp
+=== Fullworks Simple Setup for Amazon SES ===
+Contributors: fullworks, alanfuller
+Tags: email, aws, ses, smtp, amazon
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 8.2
@@ -12,7 +12,9 @@ Send WordPress emails through Amazon SES (Simple Email Service) with easy config
 
 == Description ==
 
-Simple AWS SES replaces the default WordPress email function with Amazon SES, ensuring reliable email delivery for your WordPress site.
+Fullworks Simple Setup for Amazon SES replaces the default WordPress email function with Amazon SES, ensuring reliable email delivery for your WordPress site.
+
+This plugin is an independent project and is not affiliated with, endorsed by, or sponsored by Amazon Web Services, Inc.
 
 Features:
 * Easy configuration through WordPress admin
@@ -24,9 +26,9 @@ Features:
 
 == Installation ==
 
-1. Upload the `simple-aws-ses` folder to the `/wp-content/plugins/` directory
+1. Upload the `fullworks-simple-setup-for-amazon-ses` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to Settings > Simple AWS SES to configure your AWS credentials
+3. Go to Settings > Fullworks SES to configure your AWS credentials
 4. Enter your AWS Access Key ID, Secret Access Key, and select your AWS region
 5. Configure your sender email address (must be verified in AWS SES)
 6. Send a test email to verify everything is working
@@ -48,9 +50,9 @@ Instead of storing AWS credentials in the database via the settings UI, you can 
 Add the following before the `/* That's all, stop editing! */` line in `wp-config.php`:
 
 `
-define( 'SIMPLE_AWS_SES_ACCESS_KEY_ID',     getenv( 'SIMPLE_AWS_SES_ACCESS_KEY_ID' ) ?: '' );
-define( 'SIMPLE_AWS_SES_SECRET_ACCESS_KEY', getenv( 'SIMPLE_AWS_SES_SECRET_ACCESS_KEY' ) ?: '' );
-define( 'SIMPLE_AWS_SES_REGION',            getenv( 'SIMPLE_AWS_SES_REGION' ) ?: 'us-east-1' );
+define( 'FSSFAS_ACCESS_KEY_ID',     getenv( 'FSSFAS_ACCESS_KEY_ID' ) ?: '' );
+define( 'FSSFAS_SECRET_ACCESS_KEY', getenv( 'FSSFAS_SECRET_ACCESS_KEY' ) ?: '' );
+define( 'FSSFAS_REGION',            getenv( 'FSSFAS_REGION' ) ?: 'us-east-1' );
 `
 
 Each constant is independent — you can define one, two, or all three. Any constant that is defined takes precedence over the value saved in the settings page, and the matching field in the admin UI is locked while the constant is in effect.
@@ -75,7 +77,7 @@ Your IAM user needs the `ses:SendEmail` and `ses:SendRawEmail` permissions.
 * AWS errors (code, message, request ID) are now surfaced in the test email response and written to `debug.log` when `WP_DEBUG` is enabled. SES failures during normal `wp_mail()` flow are also logged before the WordPress default mailer takes over.
 
 = 1.2.0 =
-* Added support for defining AWS credentials via PHP constants in wp-config.php (`SIMPLE_AWS_SES_ACCESS_KEY_ID`, `SIMPLE_AWS_SES_SECRET_ACCESS_KEY`, `SIMPLE_AWS_SES_REGION`). When a constant is defined, the matching field in the settings UI is locked.
+* Added support for defining AWS credentials via PHP constants in wp-config.php (`FSSFAS_ACCESS_KEY_ID`, `FSSFAS_SECRET_ACCESS_KEY`, `FSSFAS_REGION`). When a constant is defined, the matching field in the settings UI is locked.
 
 = 1.1.0 =
 * Fixed HTML email detection - emails with common HTML tags are now correctly sent as text/html

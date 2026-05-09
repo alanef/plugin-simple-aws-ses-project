@@ -1,5 +1,5 @@
 {
-    "name": "simple-aws-ses/wordpress-plugin",
+    "name": "fullworks/fullworks-simple-setup-for-amazon-ses",
     "description": "WordPress plugin to send emails through Amazon SES",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
@@ -10,7 +10,7 @@
     },
     "autoload": {
         "psr-4": {
-            "SimpleAwsSes\\": "src/"
+            "Fullworks\\SimpleSetupForAmazonSes\\": "src/"
         }
     }
 }

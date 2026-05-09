@@ -6,14 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a WordPress plugin that routes all emails through Amazon SES. The repository has a dual structure:
 - **Root directory**: Development environment with build tools and CI/CD
-- **`simple-aws-ses/` subdirectory**: The actual WordPress plugin code
+- **`fullworks-simple-setup-for-amazon-ses/` subdirectory**: The actual WordPress plugin code
 
 ## Essential Commands
 
 ### Development Setup
 ```bash
 # Install all dependencies
-composer install && npm install && cd simple-aws-ses && composer install && cd ..
+composer install && npm install && cd fullworks-simple-setup-for-amazon-ses && composer install && cd ..
 
 # Start local WordPress environment (http://localhost:8414)
 npm run env:start
@@ -22,22 +22,22 @@ npm run env:start
 composer run-script phpcs-security  # Security-focused checks only
 composer run-script phpcompat       # PHP 8.2+ compatibility check
 
-# Build for release (creates zipped/simple-aws-ses.zip)
+# Build for release (creates zipped/fullworks-simple-setup-for-amazon-ses.zip)
 composer run-script build
 ```
 
 ### Before Creating a Release
 1. Ensure version consistency across:
-   - `simple-aws-ses/simple-aws-ses.php` (Version header)
-   - `simple-aws-ses/simple-aws-ses.php` (SIMPLE_AWS_SES_VERSION constant)
-   - `simple-aws-ses/readme.txt` (Stable tag)
+   - `fullworks-simple-setup-for-amazon-ses/fullworks-simple-setup-for-amazon-ses.php` (Version header)
+   - `fullworks-simple-setup-for-amazon-ses/fullworks-simple-setup-for-amazon-ses.php` (FSSFAS_VERSION constant)
+   - `fullworks-simple-setup-for-amazon-ses/readme.txt` (Stable tag)
 2. Create a git tag matching the version (e.g., `v1.0.0`)
 3. Push the tag to trigger automatic GitHub release
 
 ## Architecture
 
 ### Plugin Structure
-The plugin uses PSR-4 autoloading with namespace `SimpleAwsSes\`:
+The plugin uses PSR-4 autoloading with namespace `Fullworks\SimpleSetupForAmazonSes\`:
 - `Plugin.php` - Singleton entry point, initializes admin and email handler
 - `Admin/SettingsPage.php` - WordPress settings API integration, handles AWS credentials
 - `Email/MailHandler.php` - Intercepts WordPress emails via `pre_wp_mail` filter
@@ -47,7 +47,13 @@ The plugin uses PSR-4 autoloading with namespace `SimpleAwsSes\`:
 1. **Email Interception**: Uses `pre_wp_mail` filter (WordPress 5.7+) for clean interception
 2. **AWS Integration**: Uses `sendRawEmail` instead of `sendEmail` for attachment support and full email control
 3. **Fallback Behavior**: Returns `null` from filter to allow WordPress default mail on SES failure
-4. **Settings Storage**: AWS credentials stored in WordPress options as `simple_aws_ses_settings`
+4. **Settings Storage**: AWS credentials stored in WordPress options as `fssfas_settings`
+
+### Naming Conventions
+- **Slug / text domain**: `fullworks-simple-setup-for-amazon-ses`
+- **Prefix**: `fssfas` (lowercase) / `FSSFAS` (uppercase) — used for option keys, hooks, AJAX actions, settings groups, sections, page IDs, constants
+- **Namespace**: `Fullworks\SimpleSetupForAmazonSes\`
+- **wp-config constants**: `FSSFAS_ACCESS_KEY_ID`, `FSSFAS_SECRET_ACCESS_KEY`, `FSSFAS_REGION`
 
 ### AWS SES Implementation Details
 - Builds complete MIME-formatted raw emails with proper headers
@@ -70,4 +76,4 @@ The plugin uses PSR-4 autoloading with namespace `SimpleAwsSes\`:
 - AWS credentials must have `ses:SendRawEmail` permission (NOT `ses:SendEmail`)
 
 ### Testing
-Test emails can be sent from Settings > Simple AWS SES using the AJAX-powered test button. Check WordPress debug.log for detailed AWS SES responses and errors.
+Test emails can be sent from Settings > Fullworks SES using the AJAX-powered test button. Check WordPress debug.log for detailed AWS SES responses and errors.

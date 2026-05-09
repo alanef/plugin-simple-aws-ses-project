@@ -10,14 +10,14 @@ on:
 jobs:
   quality-checks:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v5
 
     - name: Extract PHP version
       id: php_version
       run: |
-        PHP_VERSION=$(grep -oP 'Requires PHP:\s*\K[\d.]+' simple-aws-ses/simple-aws-ses.php || echo "8.2")
+        PHP_VERSION=$(grep -oP 'Requires PHP:\s*\K[\d.]+' fullworks-simple-setup-for-amazon-ses/fullworks-simple-setup-for-amazon-ses.php || echo "8.2")
         echo "version=$PHP_VERSION" >> $GITHUB_OUTPUT
 
     - name: Setup PHP
@@ -30,12 +30,12 @@ jobs:
     - name: Validate composer.json
       run: |
         composer validate --no-check-all --no-check-publish
-        cd simple-aws-ses && composer validate --no-check-all --no-check-publish
+        cd fullworks-simple-setup-for-amazon-ses && composer validate --no-check-all --no-check-publish
 
     - name: Install dependencies
       run: |
         composer install --prefer-dist --no-progress
-        cd simple-aws-ses && composer install --prefer-dist --no-progress --no-dev
+        cd fullworks-simple-setup-for-amazon-ses && composer install --prefer-dist --no-progress --no-dev
 
     - name: Run Security Checks
       run: composer run-script phpcs-security
@@ -45,14 +45,14 @@ jobs:
 
     - name: Check version consistency
       run: |
-        PLUGIN_VERSION=$(grep -oP 'Version:\s*\K[\d.]+' simple-aws-ses/simple-aws-ses.php)
-        README_VERSION=$(grep -oP 'Stable tag:\s*\K[\d.]+' simple-aws-ses/readme.txt)
-        CONSTANT_VERSION=$(grep -oP "SIMPLE_AWS_SES_VERSION['\"],\s*['\"]\\K[\\d.]+" simple-aws-ses/simple-aws-ses.php)
-        
+        PLUGIN_VERSION=$(grep -oP 'Version:\s*\K[\d.]+' fullworks-simple-setup-for-amazon-ses/fullworks-simple-setup-for-amazon-ses.php)
+        README_VERSION=$(grep -oP 'Stable tag:\s*\K[\d.]+' fullworks-simple-setup-for-amazon-ses/readme.txt)
+        CONSTANT_VERSION=$(grep -oP "FSSFAS_VERSION['\"],\s*['\"]\\K[\\d.]+" fullworks-simple-setup-for-amazon-ses/fullworks-simple-setup-for-amazon-ses.php)
+
         echo "Plugin header version: $PLUGIN_VERSION"
         echo "Readme stable tag: $README_VERSION"
         echo "Version constant: $CONSTANT_VERSION"
-        
+
         if [ "$PLUGIN_VERSION" != "$README_VERSION" ] || [ "$PLUGIN_VERSION" != "$CONSTANT_VERSION" ]; then
           echo "Version mismatch detected!"
           exit 1
@@ -62,12 +62,12 @@ jobs:
 
     - name: Build plugin
       run: |
-        cd simple-aws-ses && composer install --no-dev && cd ..
-        wp dist-archive ./simple-aws-ses ./simple-aws-ses.zip
+        cd fullworks-simple-setup-for-amazon-ses && composer install --no-dev && cd ..
+        wp dist-archive ./fullworks-simple-setup-for-amazon-ses ./fullworks-simple-setup-for-amazon-ses.zip
         mkdir tmp-build
-        unzip simple-aws-ses.zip -d tmp-build
+        unzip fullworks-simple-setup-for-amazon-ses.zip -d tmp-build
 
     - name: WordPress Plugin Check
       uses: wordpress/plugin-check-action@v1
       with:
-        build-dir: 'tmp-build/simple-aws-ses'
+        build-dir: 'tmp-build/fullworks-simple-setup-for-amazon-ses'

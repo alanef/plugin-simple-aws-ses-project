@@ -1,6 +1,6 @@
 {
     "plugins": [
-        "./simple-aws-ses"
+        "./fullworks-simple-setup-for-amazon-ses"
     ],
     "port": 8414,
     "testsPort": 8415,

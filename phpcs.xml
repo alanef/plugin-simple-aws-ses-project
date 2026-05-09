@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
-<ruleset name="Simple AWS SES">
-    <description>Coding standards for Simple AWS SES WordPress plugin</description>
+<ruleset name="Fullworks Simple Setup for Amazon SES">
+    <description>Coding standards for Fullworks Simple Setup for Amazon SES WordPress plugin</description>
 
     <!-- What to scan -->
-    <file>./simple-aws-ses</file>
-    
+    <file>./fullworks-simple-setup-for-amazon-ses</file>
+
     <!-- Exclude vendor directories -->
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/node_modules/*</exclude-pattern>
-    
+
     <!-- How to scan -->
     <arg value="sp"/> <!-- Show progress and sniff codes -->
     <arg name="basepath" value="."/>
@@ -20,7 +20,7 @@
     <rule ref="WordPress">
         <!-- Allow short array syntax -->
         <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
-        
+
         <!-- We're not translating right now -->
         <exclude name="WordPress.WP.I18n"/>
     </rule>
@@ -30,7 +30,7 @@
 
     <!-- PHP version check -->
     <config name="testVersion" value="8.2-8.4"/>
-    
+
     <!-- Use WordPress PHP Compatibility -->
     <rule ref="PHPCompatibilityWP"/>
 </ruleset>

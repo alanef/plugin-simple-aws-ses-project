@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleAwsSes;
+namespace Fullworks\SimpleSetupForAmazonSes;
 
 defined( 'ABSPATH' ) || exit;
 

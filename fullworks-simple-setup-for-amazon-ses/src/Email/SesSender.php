@@ -1,12 +1,12 @@
 <?php
 
-namespace SimpleAwsSes\Email;
+namespace Fullworks\SimpleSetupForAmazonSes\Email;
 
 defined( 'ABSPATH' ) || exit;
 
 use Aws\Ses\SesClient;
 use Aws\Exception\AwsException;
-use SimpleAwsSes\Credentials;
+use Fullworks\SimpleSetupForAmazonSes\Credentials;
 
 class SesSender {
 
@@ -15,7 +15,7 @@ class SesSender {
 	private $lastError = '';
 
 	public function __construct() {
-		$this->options = get_option( 'simple_aws_ses_settings' );
+		$this->options = get_option( 'fssfas_settings' );
 		$this->initializeClient();
 	}
 
@@ -99,7 +99,7 @@ class SesSender {
 	private function logDebug( $message ) {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( '[Simple AWS SES] ' . $message );
+			error_log( '[Fullworks SES] ' . $message );
 		}
 	}
 

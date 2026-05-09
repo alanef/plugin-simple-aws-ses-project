@@ -1,0 +1,40 @@
+# Copyright (C) 2026 Fullworks
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Fullworks Simple Setup for Amazon SES 1.2.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/fullworks-simple-setup-for-amazon-ses\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-05-09T00:00:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.10.0\n"
+"X-Domain: fullworks-simple-setup-for-amazon-ses\n"
+
+#. Plugin Name of the plugin
+#: fullworks-simple-setup-for-amazon-ses.php
+msgid "Fullworks Simple Setup for Amazon SES"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: fullworks-simple-setup-for-amazon-ses.php
+msgid "https://fullworksplugins.com/fullworks-simple-setup-for-amazon-ses"
+msgstr ""
+
+#. Description of the plugin
+#: fullworks-simple-setup-for-amazon-ses.php
+msgid "Send WordPress emails through Amazon SES (Simple Email Service)."
+msgstr ""
+
+#. Author of the plugin
+#: fullworks-simple-setup-for-amazon-ses.php
+msgid "Fullworks"
+msgstr ""
+
+#. Author URI of the plugin
+#: fullworks-simple-setup-for-amazon-ses.php
+msgid "https://fullworksplugins.com"
+msgstr ""

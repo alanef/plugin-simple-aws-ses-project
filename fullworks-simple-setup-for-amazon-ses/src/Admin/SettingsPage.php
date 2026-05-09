@@ -1,11 +1,11 @@
 <?php
 
-namespace SimpleAwsSes\Admin;
+namespace Fullworks\SimpleSetupForAmazonSes\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
-use SimpleAwsSes\Credentials;
-use SimpleAwsSes\Email\SesSender;
+use Fullworks\SimpleSetupForAmazonSes\Credentials;
+use Fullworks\SimpleSetupForAmazonSes\Email\SesSender;
 
 class SettingsPage {
 
@@ -14,28 +14,28 @@ class SettingsPage {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'addPluginPage' ) );
 		add_action( 'admin_init', array( $this, 'initSettings' ) );
-		add_action( 'wp_ajax_simple_aws_ses_test_email', array( $this, 'handleTestEmail' ) );
+		add_action( 'wp_ajax_fssfas_test_email', array( $this, 'handleTestEmail' ) );
 	}
 
 	public function addPluginPage() {
 		add_options_page(
-			'Simple AWS SES Settings',
-			'Simple AWS SES',
+			'Fullworks Simple Setup for Amazon SES',
+			'Fullworks SES',
 			'manage_options',
-			'simple-aws-ses',
+			'fullworks-simple-setup-for-amazon-ses',
 			array( $this, 'createAdminPage' )
 		);
 	}
 
 	public function createAdminPage() {
-		$this->options = get_option( 'simple_aws_ses_settings' );
+		$this->options = get_option( 'fssfas_settings' );
 		?>
 		<div class="wrap">
-			<h1>Simple AWS SES Settings</h1>
+			<h1>Fullworks Simple Setup for Amazon SES</h1>
 			<form method="post" action="options.php">
 				<?php
-				settings_fields( 'simple_aws_ses_group' );
-				do_settings_sections( 'simple-aws-ses-settings' );
+				settings_fields( 'fssfas_group' );
+				do_settings_sections( 'fssfas-settings' );
 				submit_button();
 				?>
 			</form>
@@ -45,84 +45,84 @@ class SettingsPage {
 
 	public function initSettings() {
 		register_setting(
-			'simple_aws_ses_group',
-			'simple_aws_ses_settings',
+			'fssfas_group',
+			'fssfas_settings',
 			array( $this, 'sanitize' )
 		);
 
 		add_settings_section(
-			'simple_aws_ses_credentials',
+			'fssfas_credentials',
 			'AWS Credentials',
 			array( $this, 'printSectionInfo' ),
-			'simple-aws-ses-settings'
+			'fssfas-settings'
 		);
 
 		add_settings_field(
 			'aws_access_key',
 			'AWS Access Key ID',
 			array( $this, 'awsAccessKeyCallback' ),
-			'simple-aws-ses-settings',
-			'simple_aws_ses_credentials'
+			'fssfas-settings',
+			'fssfas_credentials'
 		);
 
 		add_settings_field(
 			'aws_secret_key',
 			'AWS Secret Access Key',
 			array( $this, 'awsSecretKeyCallback' ),
-			'simple-aws-ses-settings',
-			'simple_aws_ses_credentials'
+			'fssfas-settings',
+			'fssfas_credentials'
 		);
 
 		add_settings_field(
 			'aws_region',
 			'AWS Region',
 			array( $this, 'awsRegionCallback' ),
-			'simple-aws-ses-settings',
-			'simple_aws_ses_credentials'
+			'fssfas-settings',
+			'fssfas_credentials'
 		);
 
 		add_settings_section(
-			'simple_aws_ses_sender',
+			'fssfas_sender',
 			'Sender Settings',
 			array( $this, 'printSenderSectionInfo' ),
-			'simple-aws-ses-settings'
+			'fssfas-settings'
 		);
 
 		add_settings_field(
 			'from_email',
 			'From Email',
 			array( $this, 'fromEmailCallback' ),
-			'simple-aws-ses-settings',
-			'simple_aws_ses_sender'
+			'fssfas-settings',
+			'fssfas_sender'
 		);
 
 		add_settings_field(
 			'from_name',
 			'From Name',
 			array( $this, 'fromNameCallback' ),
-			'simple-aws-ses-settings',
-			'simple_aws_ses_sender'
+			'fssfas-settings',
+			'fssfas_sender'
 		);
 
 		add_settings_section(
-			'simple_aws_ses_test',
+			'fssfas_test',
 			'Test Email',
 			array( $this, 'printTestSectionInfo' ),
-			'simple-aws-ses-settings'
+			'fssfas-settings'
 		);
 
 		add_settings_field(
 			'test_email',
 			'Send Test Email',
 			array( $this, 'testEmailCallback' ),
-			'simple-aws-ses-settings',
-			'simple_aws_ses_test'
+			'fssfas-settings',
+			'fssfas_test'
 		);
 	}
 
 	public function sanitize( $input ) {
 		$new_input = array();
-		$existing  = get_option( 'simple_aws_ses_settings' );
+		$existing  = get_option( 'fssfas_settings' );
 		if ( ! is_array( $existing ) ) {
 			$existing = array();
 		}
@@ -160,7 +160,7 @@ class SettingsPage {
 
 	public function printSectionInfo() {
 		echo 'Enter your AWS credentials below. You can find these in your AWS Console under IAM.';
-		echo '<p class="description">Credentials can also be defined as PHP constants in <code>wp-config.php</code> (<code>SIMPLE_AWS_SES_ACCESS_KEY_ID</code>, <code>SIMPLE_AWS_SES_SECRET_ACCESS_KEY</code>, <code>SIMPLE_AWS_SES_REGION</code>). When defined, the matching field below is locked and the constant value is used.</p>';
+		echo '<p class="description">Credentials can also be defined as PHP constants in <code>wp-config.php</code> (<code>FSSFAS_ACCESS_KEY_ID</code>, <code>FSSFAS_SECRET_ACCESS_KEY</code>, <code>FSSFAS_REGION</code>). When defined, the matching field below is locked and the constant value is used.</p>';
 	}
 
 	private function definedNotice() {
@@ -176,7 +176,7 @@ class SettingsPage {
 		$value    = $defined ? Credentials::accessKey() : ( $this->options['aws_access_key'] ?? '' );
 		$disabled = $defined ? ' disabled="disabled"' : '';
 		printf(
-			'<input type="text" id="aws_access_key" name="simple_aws_ses_settings[aws_access_key]" value="%s" class="regular-text"%s />',
+			'<input type="text" id="aws_access_key" name="fssfas_settings[aws_access_key]" value="%s" class="regular-text"%s />',
 			esc_attr( $value ),
 			$disabled // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		);
@@ -192,7 +192,7 @@ class SettingsPage {
 		$type     = $defined ? 'text' : 'password';
 		$disabled = $defined ? ' disabled="disabled"' : '';
 		printf(
-			'<input type="%s" id="aws_secret_key" name="simple_aws_ses_settings[aws_secret_key]" value="%s" class="regular-text"%s />',
+			'<input type="%s" id="aws_secret_key" name="fssfas_settings[aws_secret_key]" value="%s" class="regular-text"%s />',
 			esc_attr( $type ),
 			esc_attr( $value ),
 			$disabled // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -225,7 +225,7 @@ class SettingsPage {
 		$disabled       = $defined ? ' disabled="disabled"' : '';
 
 		printf(
-			'<select id="aws_region" name="simple_aws_ses_settings[aws_region]"%s>',
+			'<select id="aws_region" name="fssfas_settings[aws_region]"%s>',
 			$disabled // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		);
 		foreach ( $regions as $key => $label ) {
@@ -244,7 +244,7 @@ class SettingsPage {
 
 	public function fromEmailCallback() {
 		printf(
-			'<input type="email" id="from_email" name="simple_aws_ses_settings[from_email]" value="%s" class="regular-text" />',
+			'<input type="email" id="from_email" name="fssfas_settings[from_email]" value="%s" class="regular-text" />',
 			isset( $this->options['from_email'] ) ? esc_attr( $this->options['from_email'] ) : ''
 		);
 		echo '<p class="description">This email must be verified in AWS SES.</p>';
@@ -252,7 +252,7 @@ class SettingsPage {
 
 	public function fromNameCallback() {
 		printf(
-			'<input type="text" id="from_name" name="simple_aws_ses_settings[from_name]" value="%s" class="regular-text" />',
+			'<input type="text" id="from_name" name="fssfas_settings[from_name]" value="%s" class="regular-text" />',
 			isset( $this->options['from_name'] ) ? esc_attr( $this->options['from_name'] ) : ''
 		);
 	}
@@ -266,7 +266,7 @@ class SettingsPage {
 		<input type="email" id="test_email_address" placeholder="your-email@example.com" class="regular-text" />
 		<button type="button" class="button" id="send_test_email">Send Test Email</button>
 		<span id="test_email_result"></span>
-		
+
 		<script>
 		jQuery(document).ready(function($) {
 			$('#send_test_email').click(function() {
@@ -275,13 +275,13 @@ class SettingsPage {
 					alert('Please enter an email address');
 					return;
 				}
-				
+
 				$('#test_email_result').html('Sending...');
-				
+
 				$.post(ajaxurl, {
-					action: 'simple_aws_ses_test_email',
+					action: 'fssfas_test_email',
 					email: email,
-					nonce: '<?php echo esc_js( wp_create_nonce( 'simple_aws_ses_test' ) ); ?>'
+					nonce: '<?php echo esc_js( wp_create_nonce( 'fssfas_test' ) ); ?>'
 				}, function(response) {
 					if (response.success) {
 						$('#test_email_result').html('<span style="color: green;">✓ Test email sent successfully!</span>');
@@ -297,7 +297,7 @@ class SettingsPage {
 
 	public function handleTestEmail() {
 		// Verify nonce.
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'simple_aws_ses_test' ) ) {
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'fssfas_test' ) ) {
 			wp_send_json_error( 'Invalid security token' );
 		}
 
@@ -319,8 +319,8 @@ class SettingsPage {
 			wp_send_json_error( 'AWS credentials are not configured.' );
 		}
 
-		$subject  = 'Simple AWS SES Test Email';
-		$message  = 'This is a test email from your WordPress site using Simple AWS SES plugin.';
+		$subject  = 'Fullworks Simple Setup for Amazon SES Test Email';
+		$message  = 'This is a test email from your WordPress site using the Fullworks Simple Setup for Amazon SES plugin.';
 		$message .= "\n\n";
 		$message .= 'If you received this email, your AWS SES configuration is working correctly!';
 		$message .= "\n\n";

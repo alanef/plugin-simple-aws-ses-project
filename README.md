@@ -1,10 +1,12 @@
-# Simple AWS SES WordPress Plugin
+# Fullworks Simple Setup for Amazon SES — WordPress Plugin
 
 A WordPress plugin that routes all emails through Amazon SES (Simple Email Service) for reliable email delivery.
 
+This plugin is an independent project and is not affiliated with, endorsed by, or sponsored by Amazon Web Services, Inc.
+
 ## Overview
 
-This repository contains the development environment for the Simple AWS SES WordPress plugin. The actual plugin code is located in the `simple-aws-ses` subdirectory.
+This repository contains the development environment for the Fullworks Simple Setup for Amazon SES WordPress plugin. The actual plugin code is located in the `fullworks-simple-setup-for-amazon-ses` subdirectory.
 
 ## Features
 
@@ -28,8 +30,8 @@ This repository contains the development environment for the Simple AWS SES Word
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/alanef/plugin-simple-aws-ses-project.git
-cd plugin-simple-aws-ses-project
+git clone https://github.com/alanef/plugin-fullworks-simple-setup-for-amazon-ses-project.git
+cd plugin-fullworks-simple-setup-for-amazon-ses-project
 ```
 
 2. Install development dependencies:
@@ -40,7 +42,7 @@ npm install
 
 3. Install plugin dependencies:
 ```bash
-cd simple-aws-ses
+cd fullworks-simple-setup-for-amazon-ses
 composer install
 cd ..
 ```
@@ -52,7 +54,7 @@ Start the WordPress development environment:
 npm run env:start
 ```
 
-The plugin will be available at `http://localhost:8888`
+The plugin will be available at `http://localhost:8414`
 
 Stop the environment:
 ```bash
@@ -66,10 +68,7 @@ Build a distributable version of the plugin:
 composer run-script build
 ```
 
-This creates a clean build in the `dist` directory with:
-- Production dependencies only
-- No development files
-- Optimized autoloader
+This creates `zipped/fullworks-simple-setup-for-amazon-ses.zip` with production dependencies only.
 
 ## Code Quality
 
@@ -145,7 +144,7 @@ Your IAM user needs the following permissions. You can either use the AWS manage
 ### Plugin Configuration
 
 1. Install and activate the plugin
-2. Go to Settings > Simple AWS SES
+2. Go to Settings > Fullworks SES
 3. Enter your AWS credentials:
    - Access Key ID
    - Secret Access Key

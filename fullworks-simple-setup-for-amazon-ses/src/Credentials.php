@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleAwsSes;
+namespace Fullworks\SimpleSetupForAmazonSes;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -10,15 +10,15 @@ defined( 'ABSPATH' ) || exit;
  * Constants are intended to be defined in wp-config.php, typically bridged from
  * environment variables, e.g.:
  *
- *     define( 'SIMPLE_AWS_SES_ACCESS_KEY_ID', getenv( 'SIMPLE_AWS_SES_ACCESS_KEY_ID' ) ?: '' );
- *     define( 'SIMPLE_AWS_SES_SECRET_ACCESS_KEY', getenv( 'SIMPLE_AWS_SES_SECRET_ACCESS_KEY' ) ?: '' );
- *     define( 'SIMPLE_AWS_SES_REGION', getenv( 'SIMPLE_AWS_SES_REGION' ) ?: 'us-east-1' );
+ *     define( 'FSSFAS_ACCESS_KEY_ID', getenv( 'FSSFAS_ACCESS_KEY_ID' ) ?: '' );
+ *     define( 'FSSFAS_SECRET_ACCESS_KEY', getenv( 'FSSFAS_SECRET_ACCESS_KEY' ) ?: '' );
+ *     define( 'FSSFAS_REGION', getenv( 'FSSFAS_REGION' ) ?: 'us-east-1' );
  */
 class Credentials {
 
-	const CONST_ACCESS_KEY = 'SIMPLE_AWS_SES_ACCESS_KEY_ID';
-	const CONST_SECRET_KEY = 'SIMPLE_AWS_SES_SECRET_ACCESS_KEY';
-	const CONST_REGION     = 'SIMPLE_AWS_SES_REGION';
+	const CONST_ACCESS_KEY = 'FSSFAS_ACCESS_KEY_ID';
+	const CONST_SECRET_KEY = 'FSSFAS_SECRET_ACCESS_KEY';
+	const CONST_REGION     = 'FSSFAS_REGION';
 
 	public static function accessKey() {
 		return self::resolve( self::CONST_ACCESS_KEY, 'aws_access_key', '' );
@@ -53,7 +53,7 @@ class Credentials {
 			return (string) constant( $constant );
 		}
 
-		$options = get_option( 'simple_aws_ses_settings' );
+		$options = get_option( 'fssfas_settings' );
 		if ( is_array( $options ) && isset( $options[ $option_key ] ) && $options[ $option_key ] !== '' ) {
 			return $options[ $option_key ];
 		}
