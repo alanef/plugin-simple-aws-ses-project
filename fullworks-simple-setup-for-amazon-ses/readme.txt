@@ -4,7 +4,7 @@ Tags: email, aws, ses, smtp, amazon
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 8.2
-Stable tag: 1.2.1
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +71,11 @@ Your IAM user needs the `ses:SendEmail` and `ses:SendRawEmail` permissions.
 4. Review your WordPress error logs for specific error messages
 
 == Changelog ==
+
+= 1.3.0 =
+* Renamed plugin to "Fullworks Simple Setup for Amazon SES" (previously "Simple AWS SES"). Slug, namespace (`Fullworks\SimpleSetupForAmazonSes\`), prefix (`fssfas` / `FSSFAS`), option key (`fssfas_settings`), AJAX action and wp-config constants (`FSSFAS_ACCESS_KEY_ID`, `FSSFAS_SECRET_ACCESS_KEY`, `FSSFAS_REGION`) all updated.
+* All admin UI strings, AJAX responses, and the test email body are now translatable via the `fullworks-simple-setup-for-amazon-ses` text domain.
+* Updated bundled `aws/aws-sdk-php` to the latest stable release.
 
 = 1.2.1 =
 * Test email button now sends via AWS SES directly instead of `wp_mail()`, so it no longer reports success when SES has actually failed and WordPress fell back to the default mailer.

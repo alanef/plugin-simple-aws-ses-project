@@ -20,9 +20,15 @@
     <rule ref="WordPress">
         <!-- Allow short array syntax -->
         <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+    </rule>
 
-        <!-- We're not translating right now -->
-        <exclude name="WordPress.WP.I18n"/>
+    <!-- Text domain for I18n checks -->
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="fullworks-simple-setup-for-amazon-ses"/>
+            </property>
+        </properties>
     </rule>
 
     <!-- Minimum supported WordPress version -->

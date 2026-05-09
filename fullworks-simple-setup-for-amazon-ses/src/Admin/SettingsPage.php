@@ -19,8 +19,8 @@ class SettingsPage {
 
 	public function addPluginPage() {
 		add_options_page(
-			'Fullworks Simple Setup for Amazon SES',
-			'Fullworks SES',
+			esc_html__( 'Fullworks Simple Setup for Amazon SES', 'fullworks-simple-setup-for-amazon-ses' ),
+			esc_html__( 'Fullworks SES', 'fullworks-simple-setup-for-amazon-ses' ),
 			'manage_options',
 			'fullworks-simple-setup-for-amazon-ses',
 			array( $this, 'createAdminPage' )
@@ -31,7 +31,7 @@ class SettingsPage {
 		$this->options = get_option( 'fssfas_settings' );
 		?>
 		<div class="wrap">
-			<h1>Fullworks Simple Setup for Amazon SES</h1>
+			<h1><?php esc_html_e( 'Fullworks Simple Setup for Amazon SES', 'fullworks-simple-setup-for-amazon-ses' ); ?></h1>
 			<form method="post" action="options.php">
 				<?php
 				settings_fields( 'fssfas_group' );
@@ -52,14 +52,14 @@ class SettingsPage {
 
 		add_settings_section(
 			'fssfas_credentials',
-			'AWS Credentials',
+			esc_html__( 'AWS Credentials', 'fullworks-simple-setup-for-amazon-ses' ),
 			array( $this, 'printSectionInfo' ),
 			'fssfas-settings'
 		);
 
 		add_settings_field(
 			'aws_access_key',
-			'AWS Access Key ID',
+			esc_html__( 'AWS Access Key ID', 'fullworks-simple-setup-for-amazon-ses' ),
 			array( $this, 'awsAccessKeyCallback' ),
 			'fssfas-settings',
 			'fssfas_credentials'
@@ -67,7 +67,7 @@ class SettingsPage {
 
 		add_settings_field(
 			'aws_secret_key',
-			'AWS Secret Access Key',
+			esc_html__( 'AWS Secret Access Key', 'fullworks-simple-setup-for-amazon-ses' ),
 			array( $this, 'awsSecretKeyCallback' ),
 			'fssfas-settings',
 			'fssfas_credentials'
@@ -75,7 +75,7 @@ class SettingsPage {
 
 		add_settings_field(
 			'aws_region',
-			'AWS Region',
+			esc_html__( 'AWS Region', 'fullworks-simple-setup-for-amazon-ses' ),
 			array( $this, 'awsRegionCallback' ),
 			'fssfas-settings',
 			'fssfas_credentials'
@@ -83,14 +83,14 @@ class SettingsPage {
 
 		add_settings_section(
 			'fssfas_sender',
-			'Sender Settings',
+			esc_html__( 'Sender Settings', 'fullworks-simple-setup-for-amazon-ses' ),
 			array( $this, 'printSenderSectionInfo' ),
 			'fssfas-settings'
 		);
 
 		add_settings_field(
 			'from_email',
-			'From Email',
+			esc_html__( 'From Email', 'fullworks-simple-setup-for-amazon-ses' ),
 			array( $this, 'fromEmailCallback' ),
 			'fssfas-settings',
 			'fssfas_sender'
@@ -98,7 +98,7 @@ class SettingsPage {
 
 		add_settings_field(
 			'from_name',
-			'From Name',
+			esc_html__( 'From Name', 'fullworks-simple-setup-for-amazon-ses' ),
 			array( $this, 'fromNameCallback' ),
 			'fssfas-settings',
 			'fssfas_sender'
@@ -106,14 +106,14 @@ class SettingsPage {
 
 		add_settings_section(
 			'fssfas_test',
-			'Test Email',
+			esc_html__( 'Test Email', 'fullworks-simple-setup-for-amazon-ses' ),
 			array( $this, 'printTestSectionInfo' ),
 			'fssfas-settings'
 		);
 
 		add_settings_field(
 			'test_email',
-			'Send Test Email',
+			esc_html__( 'Send Test Email', 'fullworks-simple-setup-for-amazon-ses' ),
 			array( $this, 'testEmailCallback' ),
 			'fssfas-settings',
 			'fssfas_test'
@@ -159,16 +159,26 @@ class SettingsPage {
 	}
 
 	public function printSectionInfo() {
-		echo 'Enter your AWS credentials below. You can find these in your AWS Console under IAM.';
-		echo '<p class="description">Credentials can also be defined as PHP constants in <code>wp-config.php</code> (<code>FSSFAS_ACCESS_KEY_ID</code>, <code>FSSFAS_SECRET_ACCESS_KEY</code>, <code>FSSFAS_REGION</code>). When defined, the matching field below is locked and the constant value is used.</p>';
+		echo esc_html__( 'Enter your AWS credentials below. You can find these in your AWS Console under IAM.', 'fullworks-simple-setup-for-amazon-ses' );
+		echo '<p class="description">';
+		echo wp_kses(
+			__( 'Credentials can also be defined as PHP constants in <code>wp-config.php</code> (<code>FSSFAS_ACCESS_KEY_ID</code>, <code>FSSFAS_SECRET_ACCESS_KEY</code>, <code>FSSFAS_REGION</code>). When defined, the matching field below is locked and the constant value is used.', 'fullworks-simple-setup-for-amazon-ses' ),
+			array( 'code' => array() )
+		);
+		echo '</p>';
 	}
 
 	private function definedNotice() {
-		return ' <span class="description"><em>Defined in <code>wp-config.php</code>.</em></span>';
+		return ' <span class="description"><em>'
+			. wp_kses(
+				__( 'Defined in <code>wp-config.php</code>.', 'fullworks-simple-setup-for-amazon-ses' ),
+				array( 'code' => array() )
+			)
+			. '</em></span>';
 	}
 
 	public function printSenderSectionInfo() {
-		echo 'Configure the default sender information for emails.';
+		echo esc_html__( 'Configure the default sender information for emails.', 'fullworks-simple-setup-for-amazon-ses' );
 	}
 
 	public function awsAccessKeyCallback() {
@@ -204,20 +214,20 @@ class SettingsPage {
 
 	public function awsRegionCallback() {
 		$regions = array(
-			'us-east-1'      => 'US East (N. Virginia)',
-			'us-east-2'      => 'US East (Ohio)',
-			'us-west-1'      => 'US West (N. California)',
-			'us-west-2'      => 'US West (Oregon)',
-			'eu-west-1'      => 'EU (Ireland)',
-			'eu-west-2'      => 'EU (London)',
-			'eu-west-3'      => 'EU (Paris)',
-			'eu-central-1'   => 'EU (Frankfurt)',
-			'ap-southeast-1' => 'Asia Pacific (Singapore)',
-			'ap-southeast-2' => 'Asia Pacific (Sydney)',
-			'ap-northeast-1' => 'Asia Pacific (Tokyo)',
-			'ap-northeast-2' => 'Asia Pacific (Seoul)',
-			'ap-south-1'     => 'Asia Pacific (Mumbai)',
-			'sa-east-1'      => 'South America (São Paulo)',
+			'us-east-1'      => __( 'US East (N. Virginia)', 'fullworks-simple-setup-for-amazon-ses' ),
+			'us-east-2'      => __( 'US East (Ohio)', 'fullworks-simple-setup-for-amazon-ses' ),
+			'us-west-1'      => __( 'US West (N. California)', 'fullworks-simple-setup-for-amazon-ses' ),
+			'us-west-2'      => __( 'US West (Oregon)', 'fullworks-simple-setup-for-amazon-ses' ),
+			'eu-west-1'      => __( 'EU (Ireland)', 'fullworks-simple-setup-for-amazon-ses' ),
+			'eu-west-2'      => __( 'EU (London)', 'fullworks-simple-setup-for-amazon-ses' ),
+			'eu-west-3'      => __( 'EU (Paris)', 'fullworks-simple-setup-for-amazon-ses' ),
+			'eu-central-1'   => __( 'EU (Frankfurt)', 'fullworks-simple-setup-for-amazon-ses' ),
+			'ap-southeast-1' => __( 'Asia Pacific (Singapore)', 'fullworks-simple-setup-for-amazon-ses' ),
+			'ap-southeast-2' => __( 'Asia Pacific (Sydney)', 'fullworks-simple-setup-for-amazon-ses' ),
+			'ap-northeast-1' => __( 'Asia Pacific (Tokyo)', 'fullworks-simple-setup-for-amazon-ses' ),
+			'ap-northeast-2' => __( 'Asia Pacific (Seoul)', 'fullworks-simple-setup-for-amazon-ses' ),
+			'ap-south-1'     => __( 'Asia Pacific (Mumbai)', 'fullworks-simple-setup-for-amazon-ses' ),
+			'sa-east-1'      => __( 'South America (São Paulo)', 'fullworks-simple-setup-for-amazon-ses' ),
 		);
 
 		$defined        = Credentials::isRegionDefined();
@@ -247,7 +257,7 @@ class SettingsPage {
 			'<input type="email" id="from_email" name="fssfas_settings[from_email]" value="%s" class="regular-text" />',
 			isset( $this->options['from_email'] ) ? esc_attr( $this->options['from_email'] ) : ''
 		);
-		echo '<p class="description">This email must be verified in AWS SES.</p>';
+		echo '<p class="description">' . esc_html__( 'This email must be verified in AWS SES.', 'fullworks-simple-setup-for-amazon-ses' ) . '</p>';
 	}
 
 	public function fromNameCallback() {
@@ -258,35 +268,50 @@ class SettingsPage {
 	}
 
 	public function printTestSectionInfo() {
-		echo 'Send a test email to verify your configuration is working correctly.';
+		echo esc_html__( 'Send a test email to verify your configuration is working correctly.', 'fullworks-simple-setup-for-amazon-ses' );
 	}
 
 	public function testEmailCallback() {
 		?>
-		<input type="email" id="test_email_address" placeholder="your-email@example.com" class="regular-text" />
-		<button type="button" class="button" id="send_test_email">Send Test Email</button>
+		<input type="email" id="test_email_address" placeholder="<?php echo esc_attr__( 'your-email@example.com', 'fullworks-simple-setup-for-amazon-ses' ); ?>" class="regular-text" />
+		<button type="button" class="button" id="send_test_email"><?php esc_html_e( 'Send Test Email', 'fullworks-simple-setup-for-amazon-ses' ); ?></button>
 		<span id="test_email_result"></span>
 
+		<?php
+		$fssfas_l10n = array(
+			'promptEmail' => __( 'Please enter an email address', 'fullworks-simple-setup-for-amazon-ses' ),
+			'sending'     => __( 'Sending…', 'fullworks-simple-setup-for-amazon-ses' ),
+			'success'     => __( '✓ Test email sent successfully!', 'fullworks-simple-setup-for-amazon-ses' ),
+			/* translators: %s: error message returned from AWS SES. */
+			'failedFmt'   => __( '✗ Failed: %s', 'fullworks-simple-setup-for-amazon-ses' ),
+		);
+		?>
 		<script>
 		jQuery(document).ready(function($) {
+			var fssfasL10n = <?php echo wp_json_encode( $fssfas_l10n ); ?>;
+
 			$('#send_test_email').click(function() {
 				var email = $('#test_email_address').val();
 				if (!email) {
-					alert('Please enter an email address');
+					alert(fssfasL10n.promptEmail);
 					return;
 				}
 
-				$('#test_email_result').html('Sending...');
+				$('#test_email_result').text(fssfasL10n.sending);
 
 				$.post(ajaxurl, {
 					action: 'fssfas_test_email',
 					email: email,
-					nonce: '<?php echo esc_js( wp_create_nonce( 'fssfas_test' ) ); ?>'
+					nonce: <?php echo wp_json_encode( wp_create_nonce( 'fssfas_test' ) ); ?>
 				}, function(response) {
+					var $result = $('#test_email_result').empty();
 					if (response.success) {
-						$('#test_email_result').html('<span style="color: green;">✓ Test email sent successfully!</span>');
+						$result.append($('<span/>', { css: { color: 'green' }, text: fssfasL10n.success }));
 					} else {
-						$('#test_email_result').html('<span style="color: red;">✗ Failed: ' + response.data + '</span>');
+						$result.append($('<span/>', {
+							css: { color: 'red' },
+							text: fssfasL10n.failedFmt.replace('%s', String(response.data))
+						}));
 					}
 				});
 			});
@@ -298,35 +323,37 @@ class SettingsPage {
 	public function handleTestEmail() {
 		// Verify nonce.
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'fssfas_test' ) ) {
-			wp_send_json_error( 'Invalid security token' );
+			wp_send_json_error( __( 'Invalid security token.', 'fullworks-simple-setup-for-amazon-ses' ) );
 		}
 
 		// Check permissions.
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( 'Insufficient permissions' );
+			wp_send_json_error( __( 'Insufficient permissions.', 'fullworks-simple-setup-for-amazon-ses' ) );
 		}
 
 		if ( ! isset( $_POST['email'] ) ) {
-			wp_send_json_error( 'Email address required' );
+			wp_send_json_error( __( 'Email address required.', 'fullworks-simple-setup-for-amazon-ses' ) );
 		}
 
 		$to = sanitize_email( wp_unslash( $_POST['email'] ) );
 		if ( ! is_email( $to ) ) {
-			wp_send_json_error( 'Invalid email address' );
+			wp_send_json_error( __( 'Invalid email address.', 'fullworks-simple-setup-for-amazon-ses' ) );
 		}
 
 		if ( ! Credentials::isConfigured() ) {
-			wp_send_json_error( 'AWS credentials are not configured.' );
+			wp_send_json_error( __( 'AWS credentials are not configured.', 'fullworks-simple-setup-for-amazon-ses' ) );
 		}
 
-		$subject  = 'Fullworks Simple Setup for Amazon SES Test Email';
-		$message  = 'This is a test email from your WordPress site using the Fullworks Simple Setup for Amazon SES plugin.';
+		$subject  = __( 'Fullworks Simple Setup for Amazon SES Test Email', 'fullworks-simple-setup-for-amazon-ses' );
+		$message  = __( 'This is a test email from your WordPress site using the Fullworks Simple Setup for Amazon SES plugin.', 'fullworks-simple-setup-for-amazon-ses' );
 		$message .= "\n\n";
-		$message .= 'If you received this email, your AWS SES configuration is working correctly!';
+		$message .= __( 'If you received this email, your AWS SES configuration is working correctly!', 'fullworks-simple-setup-for-amazon-ses' );
 		$message .= "\n\n";
-		$message .= 'Site: ' . get_bloginfo( 'name' );
+		/* translators: %s: site name. */
+		$message .= sprintf( __( 'Site: %s', 'fullworks-simple-setup-for-amazon-ses' ), get_bloginfo( 'name' ) );
 		$message .= "\n";
-		$message .= 'URL: ' . get_bloginfo( 'url' );
+		/* translators: %s: site URL. */
+		$message .= sprintf( __( 'URL: %s', 'fullworks-simple-setup-for-amazon-ses' ), get_bloginfo( 'url' ) );
 
 		// Bypass wp_mail() so we exercise SES directly. wp_mail() would happily
 		// fall back to the default mailer if SES failed and report success,
@@ -335,10 +362,16 @@ class SettingsPage {
 		$sent   = $sender->send( $to, $subject, $message );
 
 		if ( $sent ) {
-			wp_send_json_success( 'Test email sent via AWS SES.' );
+			wp_send_json_success( __( 'Test email sent via AWS SES.', 'fullworks-simple-setup-for-amazon-ses' ) );
 		}
 
 		$err = $sender->getLastError();
-		wp_send_json_error( 'SES send failed: ' . ( '' !== $err ? $err : 'unknown error (enable WP_DEBUG for details)' ) );
+		wp_send_json_error(
+			sprintf(
+				/* translators: %s: SES error detail. */
+				__( 'SES send failed: %s', 'fullworks-simple-setup-for-amazon-ses' ),
+				'' !== $err ? $err : __( 'unknown error (enable WP_DEBUG for details)', 'fullworks-simple-setup-for-amazon-ses' )
+			)
+		);
 	}
 }
