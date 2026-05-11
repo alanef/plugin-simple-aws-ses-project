@@ -12,5 +12,13 @@
         "psr-4": {
             "Fullworks\\SimpleSetupForAmazonSes\\": "src/"
         }
+    },
+    "scripts": {
+        "pre-autoload-dump": "Aws\\Script\\Composer\\Composer::removeUnusedServices"
+    },
+    "extra": {
+        "aws/aws-sdk-php": [
+            "Ses"
+        ]
     }
 }

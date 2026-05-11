@@ -54,19 +54,11 @@ class SesSender {
 			return false;
 		}
 
-		// Parse headers
-		$parsed_headers = $this->parseHeaders( $headers );
-
-		// Prepare recipients
-		$recipients = is_array( $to ) ? $to : array( $to );
-
-		// Get from email and name
-		$from_email = $parsed_headers['from_email'] ?? $this->options['from_email'] ?? get_option( 'admin_email' );
-		$from_name  = $parsed_headers['from_name'] ?? $this->options['from_name'] ?? get_bloginfo( 'name' );
-
-		// Build raw email
-		$boundary    = uniqid( 'boundary_' );
-		$raw_message = $this->buildRawMessage( $from_email, $from_name, $recipients, $subject, $message, $parsed_headers, $attachments, $boundary );
+		$raw_message = $this->buildRawMessage( $to, $subject, $message, $headers, $attachments );
+		if ( null === $raw_message ) {
+			// $this->lastError already set by buildRawMessage().
+			return false;
+		}
 
 		try {
 			$result = $this->client->sendRawEmail(
@@ -96,6 +88,104 @@ class SesSender {
 		}
 	}
 
+	/**
+	 * Build the complete RFC 5322 message using WordPress' bundled PHPMailer.
+	 *
+	 * PHPMailer validates every address and strips CR/LF from header values, so
+	 * untrusted input that reaches wp_mail() cannot be used to inject extra
+	 * headers into the message handed to Amazon SES.
+	 *
+	 * @return string|null The raw MIME message, or null on failure.
+	 */
+	private function buildRawMessage( $to, $subject, $message, $headers, $attachments ) {
+		if ( ! class_exists( \PHPMailer\PHPMailer\PHPMailer::class, false ) ) {
+			require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
+			require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
+		}
+
+		$parsed = $this->parseHeaders( $headers );
+
+		$from_email = $parsed['from_email'] ?? $this->options['from_email'] ?? get_option( 'admin_email' );
+		$from_name  = $parsed['from_name'] ?? $this->options['from_name'] ?? get_bloginfo( 'name' );
+
+		$mail          = new \PHPMailer\PHPMailer\PHPMailer( true );
+		$mail->CharSet = 'UTF-8';
+
+		try {
+			$mail->setFrom( $from_email, $from_name );
+
+			$this->addRecipients( $mail, 'addAddress', $to );
+			if ( ! empty( $parsed['cc'] ) ) {
+				$this->addRecipients( $mail, 'addCC', $parsed['cc'] );
+			}
+			if ( ! empty( $parsed['bcc'] ) ) {
+				$this->addRecipients( $mail, 'addBCC', $parsed['bcc'] );
+			}
+			if ( ! empty( $parsed['reply_to'] ) ) {
+				$this->addRecipients( $mail, 'addReplyTo', $parsed['reply_to'] );
+			}
+
+			$mail->Subject = $subject;
+
+			$content_type = $parsed['content_type'] ?? 'text/plain';
+			$is_html      = stripos( $content_type, 'text/html' ) !== false || $this->looksLikeHtml( $message );
+			$mail->isHTML( $is_html );
+			$mail->Body = $message;
+
+			foreach ( (array) $attachments as $name => $path ) {
+				if ( ! is_string( $path ) || '' === $path || ! is_readable( $path ) ) {
+					continue;
+				}
+				try {
+					$mail->addAttachment( $path, is_string( $name ) ? $name : '' );
+				} catch ( \PHPMailer\PHPMailer\Exception $e ) {
+					$this->logDebug( 'Skipped attachment: ' . $e->getMessage() );
+				}
+			}
+
+			$mail->preSend();
+			return $mail->getSentMIMEMessage();
+		} catch ( \PHPMailer\PHPMailer\Exception $e ) {
+			$this->lastError = 'Failed to build email message: ' . $e->getMessage();
+			$this->logDebug( $this->lastError );
+			return null;
+		}
+	}
+
+	/**
+	 * Add one or more addresses to the PHPMailer instance.
+	 *
+	 * Accepts a comma-separated string or an array, and parses the
+	 * "Name <address>" form the same way wp_mail() does. Invalid addresses are
+	 * skipped rather than aborting the whole message.
+	 *
+	 * @param \PHPMailer\PHPMailer\PHPMailer $mail   PHPMailer instance.
+	 * @param string                         $method addAddress|addCC|addBCC|addReplyTo.
+	 * @param string|array                    $value  Address(es).
+	 */
+	private function addRecipients( $mail, $method, $value ) {
+		$value = is_array( $value ) ? implode( ',', $value ) : (string) $value;
+
+		foreach ( explode( ',', $value ) as $entry ) {
+			$entry = trim( $entry );
+			if ( '' === $entry ) {
+				continue;
+			}
+
+			$name = '';
+			if ( preg_match( '/(.*)<(.+)>/', $entry, $matches ) && count( $matches ) === 3 ) {
+				$name  = trim( $matches[1] );
+				$entry = trim( $matches[2] );
+			}
+
+			try {
+				$mail->{$method}( $entry, $name );
+			} catch ( \PHPMailer\PHPMailer\Exception $e ) {
+				$this->logDebug( 'Skipped invalid recipient: ' . $e->getMessage() );
+			}
+		}
+	}
+
 	private function logDebug( $message ) {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
@@ -110,7 +200,7 @@ class SesSender {
 			return $parsed;
 		}
 
-		// Convert headers to array if string
+		// Convert headers to array if string.
 		if ( is_string( $headers ) ) {
 			$headers = explode( "\n", $headers );
 		}
@@ -155,71 +245,6 @@ class SesSender {
 		return $parsed;
 	}
 
-	private function buildRawMessage( $from_email, $from_name, $recipients, $subject, $message, $headers, $attachments, $boundary ) {
-		$raw_message = '';
-
-		// Headers
-		$raw_message .= 'From: ' . sprintf( '%s <%s>', $from_name, $from_email ) . "\r\n";
-		$raw_message .= 'To: ' . implode( ', ', $recipients ) . "\r\n";
-		$raw_message .= 'Subject: ' . $subject . "\r\n";
-
-		// Add CC if present
-		if ( ! empty( $headers['cc'] ) ) {
-			$raw_message .= 'Cc: ' . implode( ', ', $headers['cc'] ) . "\r\n";
-		}
-
-		// Add Reply-To if present
-		if ( ! empty( $headers['reply_to'] ) ) {
-			$raw_message .= 'Reply-To: ' . implode( ', ', $headers['reply_to'] ) . "\r\n";
-		}
-
-		// MIME headers
-		$raw_message .= 'MIME-Version: 1.0' . "\r\n";
-
-		// Determine content type
-		$content_type = $headers['content_type'] ?? 'text/plain';
-		$is_html      = stripos( $content_type, 'text/html' ) !== false || $this->looksLikeHtml( $message );
-
-		if ( ! empty( $attachments ) ) {
-			// Multipart message with attachments
-			$raw_message .= 'Content-Type: multipart/mixed; boundary="' . $boundary . '"' . "\r\n";
-			$raw_message .= "\r\n";
-
-			// Message body
-			$raw_message .= '--' . $boundary . "\r\n";
-			$raw_message .= 'Content-Type: ' . ( $is_html ? 'text/html' : 'text/plain' ) . '; charset=UTF-8' . "\r\n";
-			$raw_message .= 'Content-Transfer-Encoding: base64' . "\r\n";
-			$raw_message .= "\r\n";
-			$raw_message .= chunk_split( base64_encode( $message ) ) . "\r\n";
-
-			// Add attachments
-			foreach ( $attachments as $attachment ) {
-				if ( file_exists( $attachment ) ) {
-					$filename  = basename( $attachment );
-					$file_data = file_get_contents( $attachment );
-					$mime_type = mime_content_type( $attachment ) ?: 'application/octet-stream';
-
-					$raw_message .= '--' . $boundary . "\r\n";
-					$raw_message .= 'Content-Type: ' . $mime_type . '; name="' . $filename . '"' . "\r\n";
-					$raw_message .= 'Content-Transfer-Encoding: base64' . "\r\n";
-					$raw_message .= 'Content-Disposition: attachment; filename="' . $filename . '"' . "\r\n";
-					$raw_message .= "\r\n";
-					$raw_message .= chunk_split( base64_encode( $file_data ) ) . "\r\n";
-				}
-			}
-
-			$raw_message .= '--' . $boundary . '--' . "\r\n";
-		} else {
-			// Simple message without attachments
-			$raw_message .= 'Content-Type: ' . ( $is_html ? 'text/html' : 'text/plain' ) . '; charset=UTF-8' . "\r\n";
-			$raw_message .= 'Content-Transfer-Encoding: base64' . "\r\n";
-			$raw_message .= "\r\n";
-			$raw_message .= chunk_split( base64_encode( $message ) );
-		}
-
-		return $raw_message;
-	}
-
 	/**
 	 * Check if message content looks like HTML.
 	 *
@@ -227,7 +252,7 @@ class SesSender {
 	 * @return bool True if the message appears to contain HTML.
 	 */
 	private function looksLikeHtml( $message ) {
-		// Check for common HTML tags (case-insensitive)
+		// Check for common HTML tags (case-insensitive).
 		$html_pattern = '/<(html|body|div|p|br|span|a|strong|em|b|i|u|h[1-6]|ul|ol|li|table|tr|td|th|img|head|style|script)[>\s\/]/i';
 		return (bool) preg_match( $html_pattern, $message );
 	}

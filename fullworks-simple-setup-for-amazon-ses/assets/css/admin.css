@@ -1,0 +1,13 @@
+#fssfas-test-email-result {
+	margin-left: 8px;
+}
+
+#fssfas-test-email-result .fssfas-result-ok {
+	color: #008a20;
+	font-weight: 600;
+}
+
+#fssfas-test-email-result .fssfas-result-error {
+	color: #d63638;
+	font-weight: 600;
+}

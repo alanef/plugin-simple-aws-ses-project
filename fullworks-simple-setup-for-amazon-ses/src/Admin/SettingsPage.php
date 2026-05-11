@@ -10,20 +10,79 @@ use Fullworks\SimpleSetupForAmazonSes\Email\SesSender;
 class SettingsPage {
 
 	private $options;
+	private $hookSuffix = '';
 
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'addPluginPage' ) );
 		add_action( 'admin_init', array( $this, 'initSettings' ) );
+		add_action( 'admin_init', array( $this, 'registerPrivacyPolicyContent' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueueAssets' ) );
 		add_action( 'wp_ajax_fssfas_test_email', array( $this, 'handleTestEmail' ) );
 	}
 
 	public function addPluginPage() {
-		add_options_page(
+		$this->hookSuffix = add_options_page(
 			esc_html__( 'Fullworks Simple Setup for Amazon SES', 'fullworks-simple-setup-for-amazon-ses' ),
 			esc_html__( 'Fullworks SES', 'fullworks-simple-setup-for-amazon-ses' ),
 			'manage_options',
 			'fullworks-simple-setup-for-amazon-ses',
 			array( $this, 'createAdminPage' )
+		);
+	}
+
+	public function enqueueAssets( $hook ) {
+		if ( empty( $this->hookSuffix ) || $hook !== $this->hookSuffix ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'fssfas-admin',
+			FSSFAS_PLUGIN_URL . 'assets/css/admin.css',
+			array(),
+			FSSFAS_VERSION
+		);
+
+		wp_enqueue_script(
+			'fssfas-admin',
+			FSSFAS_PLUGIN_URL . 'assets/js/admin.js',
+			array( 'jquery' ),
+			FSSFAS_VERSION,
+			true
+		);
+
+		wp_localize_script(
+			'fssfas-admin',
+			'fssfasAdmin',
+			array(
+				'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
+				'nonce'         => wp_create_nonce( 'fssfas_test' ),
+				'promptEmail'   => __( 'Please enter an email address', 'fullworks-simple-setup-for-amazon-ses' ),
+				'sending'       => __( 'Sending…', 'fullworks-simple-setup-for-amazon-ses' ),
+				'success'       => __( '✓ Test email sent successfully!', 'fullworks-simple-setup-for-amazon-ses' ),
+				/* translators: %s: error message returned from AWS SES. */
+				'failedFmt'     => __( '✗ Failed: %s', 'fullworks-simple-setup-for-amazon-ses' ),
+				'requestFailed' => __( 'the request could not be completed', 'fullworks-simple-setup-for-amazon-ses' ),
+			)
+		);
+	}
+
+	public function registerPrivacyPolicyContent() {
+		if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+			return;
+		}
+
+		$content = wp_kses(
+			__( 'This site sends outgoing email through Amazon Simple Email Service (Amazon SES). When an email is sent, the recipient, sender, subject, message body, and any attachments are transmitted to Amazon Web Services, Inc. for delivery, together with the AWS Access Key ID and region used to authenticate the request. See the <a href="https://aws.amazon.com/privacy/">AWS Privacy Notice</a> for details on how AWS handles this data.', 'fullworks-simple-setup-for-amazon-ses' ),
+			array(
+				'a' => array(
+					'href' => array(),
+				),
+			)
+		);
+
+		wp_add_privacy_policy_content(
+			__( 'Fullworks Simple Setup for Amazon SES', 'fullworks-simple-setup-for-amazon-ses' ),
+			wpautop( $content )
 		);
 	}
 
@@ -273,50 +332,9 @@ class SettingsPage {
 
 	public function testEmailCallback() {
 		?>
-		<input type="email" id="test_email_address" placeholder="<?php echo esc_attr__( 'your-email@example.com', 'fullworks-simple-setup-for-amazon-ses' ); ?>" class="regular-text" />
-		<button type="button" class="button" id="send_test_email"><?php esc_html_e( 'Send Test Email', 'fullworks-simple-setup-for-amazon-ses' ); ?></button>
-		<span id="test_email_result"></span>
-
-		<?php
-		$fssfas_l10n = array(
-			'promptEmail' => __( 'Please enter an email address', 'fullworks-simple-setup-for-amazon-ses' ),
-			'sending'     => __( 'Sending…', 'fullworks-simple-setup-for-amazon-ses' ),
-			'success'     => __( '✓ Test email sent successfully!', 'fullworks-simple-setup-for-amazon-ses' ),
-			/* translators: %s: error message returned from AWS SES. */
-			'failedFmt'   => __( '✗ Failed: %s', 'fullworks-simple-setup-for-amazon-ses' ),
-		);
-		?>
-		<script>
-		jQuery(document).ready(function($) {
-			var fssfasL10n = <?php echo wp_json_encode( $fssfas_l10n ); ?>;
-
-			$('#send_test_email').click(function() {
-				var email = $('#test_email_address').val();
-				if (!email) {
-					alert(fssfasL10n.promptEmail);
-					return;
-				}
-
-				$('#test_email_result').text(fssfasL10n.sending);
-
-				$.post(ajaxurl, {
-					action: 'fssfas_test_email',
-					email: email,
-					nonce: <?php echo wp_json_encode( wp_create_nonce( 'fssfas_test' ) ); ?>
-				}, function(response) {
-					var $result = $('#test_email_result').empty();
-					if (response.success) {
-						$result.append($('<span/>', { css: { color: 'green' }, text: fssfasL10n.success }));
-					} else {
-						$result.append($('<span/>', {
-							css: { color: 'red' },
-							text: fssfasL10n.failedFmt.replace('%s', String(response.data))
-						}));
-					}
-				});
-			});
-		});
-		</script>
+		<input type="email" id="fssfas-test-email-address" placeholder="<?php echo esc_attr__( 'your-email@example.com', 'fullworks-simple-setup-for-amazon-ses' ); ?>" class="regular-text" />
+		<button type="button" class="button" id="fssfas-send-test-email"><?php esc_html_e( 'Send Test Email', 'fullworks-simple-setup-for-amazon-ses' ); ?></button>
+		<span id="fssfas-test-email-result"></span>
 		<?php
 	}
 

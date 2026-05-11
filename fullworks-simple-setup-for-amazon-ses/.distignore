@@ -8,11 +8,15 @@ composer.lock
 
 # Tests
 tests
+Tests
 phpunit.xml
 phpunit.xml.dist
 
-# Documentation
+# Documentation / vendor docs not needed at runtime
 CONTRIBUTING.md
+*.md
+docs
+.github
 
 # IDE
 .idea

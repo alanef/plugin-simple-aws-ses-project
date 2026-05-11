@@ -21,7 +21,7 @@ Features:
 * Optional credential configuration via wp-config.php constants (12-factor / env-var friendly)
 * Supports all standard WordPress emails
 * Test email functionality
-* Secure credential storage
+* Credentials stored in the WordPress database, or defined as wp-config.php constants to keep them out of the database
 * Support for HTML and plain text emails
 
 == Installation ==
@@ -57,11 +57,35 @@ define( 'FSSFAS_REGION',            getenv( 'FSSFAS_REGION' ) ?: 'us-east-1' );
 
 Each constant is independent — you can define one, two, or all three. Any constant that is defined takes precedence over the value saved in the settings page, and the matching field in the admin UI is locked while the constant is in effect.
 
+== External Services ==
+
+This plugin sends your site's outgoing email through Amazon Simple Email Service (Amazon SES), a service provided by Amazon Web Services, Inc. When WordPress sends an email and the plugin has been configured with valid AWS credentials, the message is transmitted to Amazon SES instead of being delivered by your server's default mailer.
+
+The following data is sent to Amazon SES for each email:
+
+* The recipient address(es), and any Cc, Bcc and Reply-To addresses
+* The sender name and address
+* The email subject and message body
+* Any file attachments included with the email
+* Your AWS Access Key ID and the AWS region you select, used to authenticate the request
+
+No data is sent to Amazon SES unless you have entered AWS credentials in the plugin settings (or defined them as `wp-config.php` constants). Without credentials the plugin does nothing and WordPress sends email using its normal method.
+
+This service is provided by Amazon Web Services, Inc. Your use of it is governed by their terms and privacy policy:
+
+* Amazon SES: https://aws.amazon.com/ses/
+* AWS Service Terms: https://aws.amazon.com/service-terms/
+* AWS Privacy Notice: https://aws.amazon.com/privacy/
+
 == Frequently Asked Questions ==
 
 = What permissions does my AWS IAM user need? =
 
 Your IAM user needs the `ses:SendEmail` and `ses:SendRawEmail` permissions.
+
+= What data does this plugin send to Amazon? =
+
+See the "External Services" section above — in short, the contents of any email WordPress sends (recipients, sender, subject, body, attachments) plus your AWS Access Key ID and region for authentication.
 
 = My emails are not being sent. What should I check? =
 
@@ -75,7 +99,10 @@ Your IAM user needs the `ses:SendEmail` and `ses:SendRawEmail` permissions.
 = 1.3.0 =
 * Renamed plugin to "Fullworks Simple Setup for Amazon SES" (previously "Simple AWS SES"). Slug, namespace (`Fullworks\SimpleSetupForAmazonSes\`), prefix (`fssfas` / `FSSFAS`), option key (`fssfas_settings`), AJAX action and wp-config constants (`FSSFAS_ACCESS_KEY_ID`, `FSSFAS_SECRET_ACCESS_KEY`, `FSSFAS_REGION`) all updated.
 * All admin UI strings, AJAX responses, and the test email body are now translatable via the `fullworks-simple-setup-for-amazon-ses` text domain.
-* Updated bundled `aws/aws-sdk-php` to the latest stable release.
+* Security: outgoing messages are now assembled with WordPress' bundled PHPMailer, which validates addresses and strips line breaks from headers, closing a potential email header injection path when other plugins pass untrusted data to `wp_mail()`.
+* The settings page JavaScript and CSS are now enqueued properly (`wp_enqueue_script` / `wp_localize_script`) instead of being printed inline.
+* Added a privacy policy suggestion via `wp_add_privacy_policy_content()`, and an "External Services" section in the readme documenting exactly what data is sent to Amazon SES.
+* Updated bundled `aws/aws-sdk-php` to the latest stable release and stripped the unused AWS service clients so the plugin download is dramatically smaller.
 
 = 1.2.1 =
 * Test email button now sends via AWS SES directly instead of `wp_mail()`, so it no longer reports success when SES has actually failed and WordPress fell back to the default mailer.

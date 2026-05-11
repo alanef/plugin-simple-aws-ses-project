@@ -8,7 +8,7 @@
 # Dependencies
 node_modules/
 vendor/
-simple-aws-ses/vendor/
+fullworks-simple-setup-for-amazon-ses/vendor/
 
 # Build artifacts
 dist/

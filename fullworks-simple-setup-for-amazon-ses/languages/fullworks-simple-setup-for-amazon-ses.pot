@@ -9,15 +9,16 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-09T10:29:21+00:00\n"
+"POT-Creation-Date: 2026-05-11T14:20:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: fullworks-simple-setup-for-amazon-ses\n"
 
 #. Plugin Name of the plugin
 #: fullworks-simple-setup-for-amazon-ses.php
-#: src/Admin/SettingsPage.php:22
-#: src/Admin/SettingsPage.php:34
+#: src/Admin/SettingsPage.php:25
+#: src/Admin/SettingsPage.php:84
+#: src/Admin/SettingsPage.php:93
 msgid "Fullworks Simple Setup for Amazon SES"
 msgstr ""
 
@@ -41,199 +42,207 @@ msgstr ""
 msgid "https://fullworksplugins.com"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:23
+#: src/Admin/SettingsPage.php:26
 msgid "Fullworks SES"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:55
-msgid "AWS Credentials"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:62
-msgid "AWS Access Key ID"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:70
-msgid "AWS Secret Access Key"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:78
-msgid "AWS Region"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:86
-msgid "Sender Settings"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:93
-msgid "From Email"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:101
-msgid "From Name"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:109
-msgid "Test Email"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:116
-#: src/Admin/SettingsPage.php:277
-msgid "Send Test Email"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:162
-msgid "Enter your AWS credentials below. You can find these in your AWS Console under IAM."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:165
-msgid "Credentials can also be defined as PHP constants in <code>wp-config.php</code> (<code>FSSFAS_ACCESS_KEY_ID</code>, <code>FSSFAS_SECRET_ACCESS_KEY</code>, <code>FSSFAS_REGION</code>). When defined, the matching field below is locked and the constant value is used."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:174
-msgid "Defined in <code>wp-config.php</code>."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:181
-msgid "Configure the default sender information for emails."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:217
-msgid "US East (N. Virginia)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:218
-msgid "US East (Ohio)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:219
-msgid "US West (N. California)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:220
-msgid "US West (Oregon)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:221
-msgid "EU (Ireland)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:222
-msgid "EU (London)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:223
-msgid "EU (Paris)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:224
-msgid "EU (Frankfurt)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:225
-msgid "Asia Pacific (Singapore)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:226
-msgid "Asia Pacific (Sydney)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:227
-msgid "Asia Pacific (Tokyo)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:228
-msgid "Asia Pacific (Seoul)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:229
-msgid "Asia Pacific (Mumbai)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:230
-msgid "South America (São Paulo)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:260
-msgid "This email must be verified in AWS SES."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:271
-msgid "Send a test email to verify your configuration is working correctly."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:276
-msgid "your-email@example.com"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:282
+#: src/Admin/SettingsPage.php:59
 msgid "Please enter an email address"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:283
+#: src/Admin/SettingsPage.php:60
 msgid "Sending…"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:284
+#: src/Admin/SettingsPage.php:61
 msgid "✓ Test email sent successfully!"
 msgstr ""
 
 #. translators: %s: error message returned from AWS SES.
-#: src/Admin/SettingsPage.php:286
+#: src/Admin/SettingsPage.php:63
 msgid "✗ Failed: %s"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:326
-msgid "Invalid security token."
+#: src/Admin/SettingsPage.php:64
+msgid "the request could not be completed"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:331
-msgid "Insufficient permissions."
+#: src/Admin/SettingsPage.php:75
+msgid "This site sends outgoing email through Amazon Simple Email Service (Amazon SES). When an email is sent, the recipient, sender, subject, message body, and any attachments are transmitted to Amazon Web Services, Inc. for delivery, together with the AWS Access Key ID and region used to authenticate the request. See the <a href=\"https://aws.amazon.com/privacy/\">AWS Privacy Notice</a> for details on how AWS handles this data."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:114
+msgid "AWS Credentials"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:121
+msgid "AWS Access Key ID"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:129
+msgid "AWS Secret Access Key"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:137
+msgid "AWS Region"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:145
+msgid "Sender Settings"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:152
+msgid "From Email"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:160
+msgid "From Name"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:168
+msgid "Test Email"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:175
+#: src/Admin/SettingsPage.php:336
+msgid "Send Test Email"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:221
+msgid "Enter your AWS credentials below. You can find these in your AWS Console under IAM."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:224
+msgid "Credentials can also be defined as PHP constants in <code>wp-config.php</code> (<code>FSSFAS_ACCESS_KEY_ID</code>, <code>FSSFAS_SECRET_ACCESS_KEY</code>, <code>FSSFAS_REGION</code>). When defined, the matching field below is locked and the constant value is used."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:233
+msgid "Defined in <code>wp-config.php</code>."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:240
+msgid "Configure the default sender information for emails."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:276
+msgid "US East (N. Virginia)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:277
+msgid "US East (Ohio)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:278
+msgid "US West (N. California)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:279
+msgid "US West (Oregon)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:280
+msgid "EU (Ireland)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:281
+msgid "EU (London)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:282
+msgid "EU (Paris)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:283
+msgid "EU (Frankfurt)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:284
+msgid "Asia Pacific (Singapore)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:285
+msgid "Asia Pacific (Sydney)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:286
+msgid "Asia Pacific (Tokyo)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:287
+msgid "Asia Pacific (Seoul)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:288
+msgid "Asia Pacific (Mumbai)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:289
+msgid "South America (São Paulo)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:319
+msgid "This email must be verified in AWS SES."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:330
+msgid "Send a test email to verify your configuration is working correctly."
 msgstr ""
 
 #: src/Admin/SettingsPage.php:335
-msgid "Email address required."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:340
-msgid "Invalid email address."
+msgid "your-email@example.com"
 msgstr ""
 
 #: src/Admin/SettingsPage.php:344
+msgid "Invalid security token."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:349
+msgid "Insufficient permissions."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:353
+msgid "Email address required."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:358
+msgid "Invalid email address."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:362
 msgid "AWS credentials are not configured."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:347
+#: src/Admin/SettingsPage.php:365
 msgid "Fullworks Simple Setup for Amazon SES Test Email"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:348
+#: src/Admin/SettingsPage.php:366
 msgid "This is a test email from your WordPress site using the Fullworks Simple Setup for Amazon SES plugin."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:350
+#: src/Admin/SettingsPage.php:368
 msgid "If you received this email, your AWS SES configuration is working correctly!"
 msgstr ""
 
 #. translators: %s: site name.
-#: src/Admin/SettingsPage.php:353
+#: src/Admin/SettingsPage.php:371
 msgid "Site: %s"
 msgstr ""
 
 #. translators: %s: site URL.
-#: src/Admin/SettingsPage.php:356
+#: src/Admin/SettingsPage.php:374
 msgid "URL: %s"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:365
+#: src/Admin/SettingsPage.php:383
 msgid "Test email sent via AWS SES."
 msgstr ""
 
 #. translators: %s: SES error detail.
-#: src/Admin/SettingsPage.php:372
+#: src/Admin/SettingsPage.php:390
 msgid "SES send failed: %s"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:373
+#: src/Admin/SettingsPage.php:391
 msgid "unknown error (enable WP_DEBUG for details)"
 msgstr ""
