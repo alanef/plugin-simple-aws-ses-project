@@ -96,6 +96,10 @@ See the "External Services" section above — in short, the contents of any emai
 
 == Changelog ==
 
+= 1.3.1 =
+* Updated bundled `aws/aws-sdk-php` to the latest stable release.
+* Updated URI to correct path.
+
 = 1.3.0 =
 * Renamed plugin to "Fullworks Simple Setup for Amazon SES" (previously "Simple AWS SES"). Slug, namespace (`Fullworks\SimpleSetupForAmazonSes\`), prefix (`fssfas` / `FSSFAS`), option key (`fssfas_settings`), AJAX action and wp-config constants (`FSSFAS_ACCESS_KEY_ID`, `FSSFAS_SECRET_ACCESS_KEY`, `FSSFAS_REGION`) all updated.
 * All admin UI strings, AJAX responses, and the test email body are now translatable via the `fullworks-simple-setup-for-amazon-ses` text domain.
